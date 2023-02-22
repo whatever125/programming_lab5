@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>sources.models.Coordinates</OriginalElement>
+  <nodes>
+    <node x="-164.0" y="64.0">sources.commands.Exit</node>
+    <node x="1410.0" y="215.0">sources.exceptions.EndOfInputException</node>
+    <node x="1444.0" y="288.0">sources.Main</node>
+    <node x="300.0" y="288.0">sources.models.MovieGenre</node>
+    <node x="1623.0" y="64.0">sources.commands.Help</node>
+    <node x="-12.75" y="137.0">sources.models.helpers.ArgumentChecker</node>
+    <node x="668.0" y="288.0">sources.models.MpaaRating</node>
+    <node x="196.0000000000001" y="64.0">sources.commands.ExecuteScript</node>
+    <node x="863.0" y="288.0">sources.models.Person</node>
+    <node x="1009.0" y="288.0">sources.models.Movie</node>
+    <node x="1071.0" y="64.0">sources.commands.PrintAscending</node>
+    <node x="-164.0" y="215.0">sources.models.helpers.PersonArgumentChecker</node>
+    <node x="1067.0" y="137.0">sources.IOHandlers.MovieCollectionFileWriter</node>
+    <node x="1307.0" y="288.0">sources.Invoker</node>
+    <node x="364.0" y="215.0">sources.IOHandlers.ConsoleReader</node>
+    <node x="1728.0" y="64.0">sources.commands.PrintFieldDescendingOscarsCount</node>
+    <node x="1349.0" y="137.0">sources.exceptions.WrongNumberOfArgumentsException</node>
+    <node x="678.0000000000001" y="64.0">sources.commands.Show</node>
+    <node x="2051.0" y="64.0">sources.commands.Insert</node>
+    <node x="2164.0" y="64.0">sources.commands.Update</node>
+    <node x="-67.0" y="64.0">sources.commands.Save</node>
+    <node x="484.0" y="288.0">sources.models.Coordinates</node>
+    <node x="1148.0" y="288.0">sources.Receiver</node>
+    <node x="91.0" y="215.0">sources.models.helpers.MovieArgumentChecker</node>
+    <node x="368.0000000000001" y="64.0">sources.commands.Clear</node>
+    <node x="818.5" y="215.0">sources.IOHandlers.XMLFileReader</node>
+    <node x="789.0000000000001" y="64.0">sources.commands.Info</node>
+    <node x="491.0" y="137.0">sources.IOHandlers.Reader</node>
+    <node x="1431.0" y="64.0">sources.commands.PrintDescending</node>
+    <node x="777.0" y="137.0">sources.IOHandlers.MovieCollectionFileReader</node>
+    <node x="39.000000000000114" y="64.0">sources.commands.RemoveKey</node>
+    <node x="1253.0" y="64.0">sources.commands.ReplaceIfLowe</node>
+    <node x="1109.0" y="215.0">sources.IOHandlers.XMLFileWriter</node>
+    <node x="2012.0" y="137.0">sources.exceptions.InvalidFileDataException</node>
+    <node x="1722.0" y="137.0">sources.exceptions.InvalidCommandException</node>
+    <node x="835.5000000000001" y="-14.0">sources.commands.Command</node>
+    <node x="547.0" y="215.0">sources.IOHandlers.CustomFileReader</node>
+    <node x="87.0" y="288.0">sources.MovieCollection</node>
+    <node x="477.0000000000001" y="64.0">sources.commands.RemoveLowerKey</node>
+    <node x="887.0" y="64.0">sources.commands.RemoveGreater</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="sources.commands.RemoveKey" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="107.50000000000011" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.PrintFieldDescendingOscarsCount" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1879.5" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Clear" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="412.5000000000001" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.RemoveGreater" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="969.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Show" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="723.5000000000001" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Save" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-24.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.IOHandlers.CustomFileReader" target="sources.IOHandlers.Reader" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="639.5" y="190.0" />
+      <point x="542.5" y="190.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.IOHandlers.ConsoleReader" target="sources.IOHandlers.Reader" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="445.5" y="190.0" />
+      <point x="542.5" y="190.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.PrintAscending" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1152.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Exit" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-125.5" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.ReplaceIfLowe" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1332.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.models.helpers.MovieArgumentChecker" target="sources.models.helpers.ArgumentChecker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="205.0" y="190.0" />
+      <point x="79.25" y="190.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.ExecuteScript" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="272.0000000000001" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Help" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1665.5" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.IOHandlers.XMLFileReader" target="sources.IOHandlers.MovieCollectionFileReader" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Insert" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2097.5" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.PrintDescending" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="1517.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.RemoveLowerKey" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="567.5000000000001" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.IOHandlers.XMLFileWriter" target="sources.IOHandlers.MovieCollectionFileWriter" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Info" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="828.0000000000001" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.models.helpers.PersonArgumentChecker" target="sources.models.helpers.ArgumentChecker" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-46.5" y="190.0" />
+      <point x="79.25" y="190.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="sources.commands.Update" target="sources.commands.Command" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="2216.0" y="39.0" />
+      <point x="898.5" y="39.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.4318923327895595" showDependencies="false" x="1052.0" y="151.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

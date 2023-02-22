@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<movieCollection creationDate="2023-02-19T22:45:43.212237+03:00[Europe/Moscow]">
+    <movie>
+        <id>1</id>
+        <name>Titanic</name>
+        <coordinates>
+            <x>1</x>
+            <y>2</y>
+        </coordinates>
+        <creationDate>2023-02-19T22:45:43.212237+03:00[Europe/Moscow]</creationDate>
+        <oscarsCount>11</oscarsCount>
+        <genre>MUSICAL</genre>
+        <mpaaRating>NC_17</mpaaRating>
+        <director>
+            <name>James Cameron</name>
+            <birthday>1954-08-16T00:00</birthday>
+            <weight>70</weight>
+            <passportID>12345678</passportID>
+        </director>
+    </movie>
+    <movie>
+        <id>2</id>
+        <name>Taxi</name>
+        <coordinates>
+            <x>4</x>
+            <y>5</y>
+        </coordinates>
+        <creationDate>2023-02-19T22:50:43.212237+03:00[Europe/Moscow]</creationDate>
+        <oscarsCount>6</oscarsCount>
+        <genre>THRILLER</genre>
+        <mpaaRating>PG_13</mpaaRating>
+        <director>
+            <name>Gérard Pirès</name>
+            <birthday>1942-08-31T00:00</birthday>
+            <weight>80</weight>
+            <passportID/>
+        </director>
+    </movie>
+</movieCollection>
