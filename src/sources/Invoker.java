@@ -1,14 +1,11 @@
 package sources;
 
+import sources.IOHandlers.Reader;
 import sources.commands.Command;
-import sources.commands.ExecuteScript;
-import sources.exceptions.InvalidCommandException;
+import sources.exceptions.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * This class is responsible for registering and executing commands.
@@ -16,6 +13,9 @@ import java.util.HashMap;
  */
 public class Invoker {
     private final HashMap<String, Command> commands = new HashMap<>();
+    private final Stack<String> pathStack = new Stack<>();
+    private final HashMap<String, Reader> readers = new HashMap<>();
+    private String currentInput;
 
     /**
      * Registers a command with the given name.
@@ -32,37 +32,63 @@ public class Invoker {
      * @param fromPath the path of the script file which invoked this command, or null if not executing a script
      * @throws InvalidCommandException if the given command name is invalid
      */
-    public void execute(String input, String fromPath) throws InvalidCommandException {
+    public void execute(String input, String fromPath) throws InvalidScriptException, WrongNumberOfArgumentsException {
+        if (input.startsWith("//")) {
+            return;
+        }
+        currentInput = input;
         String[] inputArray = input.trim().split(" +");
         String commandName = inputArray[0].toLowerCase();
+        if (commandName.equals("")) {
+            return;
+        }
         Command command = commands.get(commandName);
         if (command == null) {
-            throw new InvalidCommandException();
-        } else {
-            String[] args = new String[inputArray.length - 1];
-            for (int i = 0; i < inputArray.length - 1; i++) {
-                args[i] = inputArray[i + 1];
+            if (fromPath == null) {
+                System.out.println(new InvalidCommandException(commandName).getMessage());
+            } else {
+                throw new InvalidScriptException(fromPath, input, "! invalid command: " + commandName + " !");
             }
-
+        } else {
             try {
-                if (command.getClass() == ExecuteScript.class && fromPath != null) {
-                    Path path1 = Paths.get(fromPath);
-                    Path path2 = Paths.get(args[0]);
-                    if (!Files.isSameFile(path1, path2)) {
-                        command.execute(args);
-                    } else {
-                        System.out.println("! file recursion error !");
-                    }
-                } else {
-                    command.execute(args);
+                pathStack.push(fromPath);
+                String[] args = new String[inputArray.length - 1];
+                for (int i = 0; i < inputArray.length - 1; i++) {
+                    args[i] = inputArray[i + 1];
                 }
+                command.execute(args);
             } catch (NumberFormatException e) {
+                // TODO: unnecessary??
                 System.out.println("! enter an integer key !");
-            } catch (IllegalArgumentException e) {
+            } catch (CollectionKeyException e) {
                 System.out.println(e.getMessage());
-            } catch (IOException e) {
-                System.out.println("! IOException: " + e.getMessage() + " !");
+            } finally {
+                pathStack.pop();
             }
         }
+    }
+
+    public boolean pathStackContains(String path) {
+        return pathStack.contains(path);
+    }
+
+    public boolean inScriptMode() {
+        return pathStack.peek() != null;
+    }
+
+    public String getPath() {
+        return pathStack.peek();
+    }
+
+    public Reader getReader(String path) {
+        return readers.get(path);
+    }
+
+    public void setReader(String path, Reader reader) {
+        readers.put(path, reader);
+    }
+
+    public String getCurrentInput() {
+        return currentInput;
     }
 }

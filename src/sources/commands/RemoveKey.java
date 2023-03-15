@@ -1,6 +1,8 @@
 package sources.commands;
 
 import sources.Receiver;
+import sources.exceptions.CollectionKeyException;
+import sources.exceptions.InvalidScriptException;
 import sources.exceptions.WrongNumberOfArgumentsException;
 
 public class RemoveKey implements Command {
@@ -11,7 +13,7 @@ public class RemoveKey implements Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws CollectionKeyException, InvalidScriptException, WrongNumberOfArgumentsException {
         if (args.length != 1) {
             throw new WrongNumberOfArgumentsException();
         }

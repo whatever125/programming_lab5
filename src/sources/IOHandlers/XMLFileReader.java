@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 /**
  * A class for reading XML files and creating a MovieCollection object from the data.
@@ -40,12 +41,20 @@ public class XMLFileReader implements MovieCollectionFileReader {
     @Override
     public MovieCollection read() throws InvalidFileDataException {
         try {
+            MovieCollection movieCollection = new MovieCollection();
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(path));
+
+            File file = new File(path);
+            if (file.length() == 0) {
+                movieCollection.setCreationDate(ZonedDateTime.now());
+                return movieCollection;
+            }
+
+            Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
-            MovieCollection movieCollection = new MovieCollection();
             String collectionCreationDateInput = document.getDocumentElement().getAttribute("creationDate");
             ZonedDateTime collectionCreationDate = ZonedDateTime.parse(collectionCreationDateInput);
 
@@ -99,6 +108,8 @@ public class XMLFileReader implements MovieCollectionFileReader {
             return movieCollection;
         } catch (NullPointerException | ParserConfigurationException | IOException | SAXException | IllegalArgumentException |
                  DateTimeParseException e) {
+            System.out.println(e.getClass());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new InvalidFileDataException(e.getMessage());
         }
     }

@@ -7,7 +7,7 @@ public class InvalidCommandException extends Exception {
     /**
      * Constructs an InvalidCommandException with a default message.
      */
-    public InvalidCommandException() {
-        super("! invalid command !");
+    public InvalidCommandException(String command) {
+        super("! invalid command: " + command + " !");
     }
 }

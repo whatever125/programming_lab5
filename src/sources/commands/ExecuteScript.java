@@ -1,6 +1,7 @@
 package sources.commands;
 
 import sources.Receiver;
+import sources.exceptions.InvalidScriptException;
 import sources.exceptions.WrongNumberOfArgumentsException;
 
 public class ExecuteScript implements Command {
@@ -11,7 +12,7 @@ public class ExecuteScript implements Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws WrongNumberOfArgumentsException, InvalidScriptException {
         if (args.length != 1) {
             throw new WrongNumberOfArgumentsException();
         }

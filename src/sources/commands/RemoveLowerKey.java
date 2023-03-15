@@ -11,7 +11,7 @@ public class RemoveLowerKey implements Command {
     }
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws WrongNumberOfArgumentsException {
         if (args.length != 1) {
             throw new WrongNumberOfArgumentsException();
         }

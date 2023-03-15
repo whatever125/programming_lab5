@@ -1,10 +1,10 @@
 package sources;
 
 import sources.IOHandlers.*;
-import sources.exceptions.InvalidCommandException;
-import sources.exceptions.InvalidFileDataException;
+import sources.exceptions.*;
 import sources.models.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,8 +22,7 @@ public class Receiver {
     private final MovieCollection movieCollection;
     private final String path;
     private final Invoker invoker;
-    private final ConsoleReader consoleReader;
-    private boolean exit;
+    private boolean exit = false;
 
     /**
      * Receiver constructor initializes the movieCollection and path variables.
@@ -36,23 +35,29 @@ public class Receiver {
         movieCollection = xmlFileReader.read();
         this.path = path;
         this.invoker = invoker;
-        this.consoleReader = new ConsoleReader();
-        this.exit = false;
     }
 
     /**
      * Reads the movie data from the console.
      * @return a Movie object with the data entered by the user.
      */
-    private Movie readMovieData() {
+    private Movie readMovieData() throws InvalidScriptException {
+        Reader reader = invoker.getReader(invoker.getPath());
+
         String movieName = null;
+        String input = null;
         while (movieName == null) {
             try {
-                movieName = consoleReader.readLine("Enter movie name").trim();
+                input = reader.readLine("Enter movie name");
+                movieName = input.trim();
                 MovieArgumentChecker.checkName(movieName);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
                 movieName = null;
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, e.getMessage());
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -60,11 +65,16 @@ public class Receiver {
         boolean xSuccess = false;
         while (!xSuccess) {
             try {
-                String xInput = consoleReader.readLine("Enter X coordinate").trim();
+                input = reader.readLine("Enter X coordinate");
+                String xInput = input.trim();
                 x = Integer.parseInt(xInput);
                 xSuccess = true;
             } catch (NumberFormatException e) {
-                System.out.println("! enter an integer !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! enter an integer !");
+                } else {
+                    System.out.println("! enter an integer !");
+                }
             }
         }
 
@@ -72,13 +82,22 @@ public class Receiver {
         boolean ySuccess = false;
         while (!ySuccess) {
             try {
-                String yInput = consoleReader.readLine("Enter Y coordinate").trim();
+                input = reader.readLine("Enter Y coordinate");
+                String yInput = input.trim();
                 y = Integer.parseInt(yInput);
                 ySuccess = true;
             } catch (NumberFormatException e) {
-                System.out.println("! enter an integer !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! enter an integer !");
+                } else {
+                    System.out.println("! enter an integer !");
+                }
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, e.getMessage());
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -88,12 +107,17 @@ public class Receiver {
         boolean oscarsCountSuccess = false;
         while (!oscarsCountSuccess) {
             try {
-                String oscarsCountInput = consoleReader.readLine("Enter oscars count").trim();
+                input = reader.readLine("Enter oscars count");
+                String oscarsCountInput = input.trim();
                 oscarsCount = Long.parseLong(oscarsCountInput);
                 MovieArgumentChecker.checkOscarsCount(oscarsCount);
                 oscarsCountSuccess = true;
             } catch (NumberFormatException e) {
-                System.out.println("! enter an integer !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! enter an integer !");
+                } else {
+                    System.out.println("! enter an integer !");
+                }
             }
         }
 
@@ -106,11 +130,16 @@ public class Receiver {
         message1.delete(message1.length() - 2, message1.length());
         message1.append(")");
         while (movieGenre == null) {
-            String movieGenreInput = consoleReader.readLine(String.valueOf(message1)).trim();
+            input = reader.readLine(String.valueOf(message1));
+            String movieGenreInput = input.trim();
             try {
                 movieGenre = MovieGenre.valueOf(movieGenreInput.toUpperCase());
             } catch (IllegalArgumentException e) {
-                System.out.println("! wrong movie genre !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! wrong movie genre !");
+                } else {
+                    System.out.println("! wrong movie genre !");
+                }
             }
         }
 
@@ -123,32 +152,47 @@ public class Receiver {
         message2.delete(message2.length() - 2, message2.length());
         message2.append(")");
         while (mpaaRating == null) {
-            String mpaaRatingInput = consoleReader.readLine(String.valueOf(message2)).trim();
+            input = reader.readLine(String.valueOf(message2));
+            String mpaaRatingInput = input.trim();
             try {
                 mpaaRating = MpaaRating.valueOf(mpaaRatingInput.toUpperCase());
             } catch (IllegalArgumentException e) {
-                System.out.println("! wrong MPAA rating !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! wrong MPAA rating !");
+                } else {
+                    System.out.println("! wrong MPAA rating !");
+                }
             }
         }
 
         String directorName = null;
         while (directorName == null) {
             try {
-                directorName = consoleReader.readLine("Enter director name").trim();
+                input = reader.readLine("Enter director name");
+                directorName = input.trim();
                 PersonArgumentChecker.checkName(directorName);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
                 directorName = null;
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, e.getMessage());
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
         LocalDateTime birthday = null;
         while (birthday == null) {
             try {
-                String birthdayInput = consoleReader.readLine("Enter director birthday in DD.MM.YYYY format").trim();
+                input = reader.readLine("Enter director birthday in DD.MM.YYYY format");
+                String birthdayInput = input.trim();
                 birthday = LocalDate.parse(birthdayInput, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay();
             } catch (DateTimeParseException e) {
-                System.out.println("! wrong date format !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! wrong date format !");
+                } else {
+                    System.out.println("! wrong date format !");
+                }
             }
         }
 
@@ -156,16 +200,25 @@ public class Receiver {
         boolean weightSuccess = false;
         while (!weightSuccess) {
             try {
-                String weightInput = consoleReader.readLine("Enter director weight").trim();
+                input = reader.readLine("Enter director weight");
+                String weightInput = input.trim();
                 if (!weightInput.equals("")) {
                     weight = Integer.parseInt(weightInput);
                 }
                 PersonArgumentChecker.checkWeight(weight);
                 weightSuccess = true;
             } catch (NumberFormatException e) {
-                System.out.println("! enter an integer !");
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, "! enter an integer !");
+                } else {
+                    System.out.println("! enter an integer !");
+                }
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, e.getMessage());
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -173,14 +226,19 @@ public class Receiver {
         String passportID = null;
         while (!passportIDSuccess) {
             try {
-                passportID = consoleReader.readLine("Enter director passport ID").trim();
+                input = reader.readLine("Enter director passport ID");
+                passportID = input.trim();
                 if (Objects.equals(passportID, "")) {
                     passportID = null;
                 }
                 PersonArgumentChecker.checkPassportID(passportID);
                 passportIDSuccess = true;
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                if (invoker.inScriptMode()) {
+                    throw new InvalidScriptException(invoker.getPath(), input, e.getMessage());
+                } else {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -240,15 +298,18 @@ public class Receiver {
      * @param key the key for the new Movie object.
      * @throws IllegalArgumentException if the key already used in the MovieCollection.
      */
-    public void insert(String key) {
-        if (movieCollection.get(Integer.parseInt(key)) == null) {
-            Movie movie = readMovieData();
-            movie.setId(Integer.parseInt(key));
-            movieCollection.put(Integer.parseInt(key), movie);
-            System.out.println("*element added successfully*");
-        } else {
-            throw new IllegalArgumentException("! key already exists !");
+    public void insert(String key) throws InvalidScriptException, CollectionKeyException {
+        if (movieCollection.get(Integer.parseInt(key)) != null) {
+            if (invoker.inScriptMode()) {
+                throw new InvalidScriptException(invoker.getPath(), invoker.getCurrentInput(), "! key already exists !");
+            } else {
+                throw new CollectionKeyException("! key already exists !");
+            }
         }
+        Movie movie = readMovieData();
+        movie.setId(Integer.parseInt(key));
+        movieCollection.put(Integer.parseInt(key), movie);
+        System.out.println("*element added successfully*");
     }
 
     /**
@@ -256,15 +317,18 @@ public class Receiver {
      * @param key the key of the Movie object to be updated.
      * @throws IllegalArgumentException if the key does not exist in the MovieCollection.
      */
-    public void update(String key) {
-        if (movieCollection.get(Integer.parseInt(key)) != null) {
-            Movie movie = readMovieData();
-            movie.setId(Integer.parseInt(key));
-            movieCollection.put(Integer.parseInt(key), movie);
-            System.out.println("*element updated successfully*");
-        } else {
-            throw new IllegalArgumentException("! key does not exist !");
+    public void update(String key) throws InvalidScriptException, CollectionKeyException {
+        if (movieCollection.get(Integer.parseInt(key)) == null) {
+            if (invoker.inScriptMode()) {
+                throw new InvalidScriptException(invoker.getPath(), invoker.getCurrentInput(), "! key does not exist !");
+            } else {
+                throw new CollectionKeyException("! key does not exist !");
+            }
         }
+        Movie movie = readMovieData();
+        movie.setId(Integer.parseInt(key));
+        movieCollection.put(Integer.parseInt(key), movie);
+        System.out.println("*element updated successfully*");
     }
 
     /**
@@ -272,13 +336,16 @@ public class Receiver {
      * @param key a string representation of the integer key of the element to remove
      * @throws IllegalArgumentException if the key does not exist in the collection
      */
-    public void removeKey(String key) {
-        if (movieCollection.get(Integer.parseInt(key)) != null) {
-            movieCollection.remove(Integer.parseInt(key));
-            System.out.println("*element removed successfully*");
-        } else {
-            throw new IllegalArgumentException("! key does not exist !");
+    public void removeKey(String key) throws CollectionKeyException, InvalidScriptException {
+        if (movieCollection.get(Integer.parseInt(key)) == null) {
+            if (invoker.inScriptMode()) {
+                throw new InvalidScriptException(invoker.getPath(), invoker.getCurrentInput(), "! key does not exist !");
+            } else {
+                throw new CollectionKeyException("! key does not exist !");
+            }
         }
+        movieCollection.remove(Integer.parseInt(key));
+        System.out.println("*element removed successfully*");
     }
 
     /**
@@ -306,21 +373,31 @@ public class Receiver {
      * Executes commands from a script file.
      * @param path the path to the script file
      */
-    public void executeScript(String path) {
+    public void executeScript(String path) throws InvalidScriptException {
         try {
+            File file = new File(path);
+            if (!file.exists()) throw new FileNotFoundException("! file " + path + " not found !");
+            if (!file.canRead() || !file.canWrite()) throw new SecurityException("! no read and/or write permission for file " + path + "  !");
+            if (invoker.pathStackContains(path)) throw new FileRecursionError(path);
+
             Reader reader = new CustomFileReader(path);
+            invoker.setReader(path, reader);
+
             while (reader.hasNextLine()) {
                 String input = reader.readLine().trim();
                 if (!input.equals("")) {
                     try {
                         invoker.execute(input, path);
-                    } catch (InvalidCommandException e) {
+                    } catch (InvalidScriptException e) {
                         System.out.println(e.getMessage());
+                        return;
+                    } catch (WrongNumberOfArgumentsException e) {
+                        throw new InvalidScriptException(path, invoker.getCurrentInput(), e.getMessage());
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("! file " + path + " not found !");
+        } catch (FileRecursionError | FileNotFoundException | SecurityException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -334,7 +411,7 @@ public class Receiver {
     /**
      * Removes all elements from the MovieCollection greater than the entered element.
      */
-    public void removeGreater() {
+    public void removeGreater() throws InvalidScriptException {
         if (checkNotEmpty()) {
             Movie movie = readMovieData();
             int count = movieCollection.removeGreater(movie);
@@ -351,17 +428,20 @@ public class Receiver {
      * @param key a string representation of the integer key of the element to replace
      * @throws IllegalArgumentException if the key does not exist in the collection
      */
-    public void replaceIfLowe(String key) {
-        if (movieCollection.get(Integer.parseInt(key)) != null) {
-            Movie movie = readMovieData();
-            boolean replaced = movieCollection.replaceIfLowe(Integer.parseInt(key), movie);
-            if (replaced) {
-                System.out.println("*element replaced successfully*");
+    public void replaceIfLowe(String key) throws InvalidScriptException, CollectionKeyException {
+        if (movieCollection.get(Integer.parseInt(key)) == null) {
+            if (invoker.inScriptMode()) {
+                throw new InvalidScriptException(invoker.getPath(), invoker.getCurrentInput(), "! key does not exist !");
             } else {
-                System.out.println("*element was not replaced*");
+                throw new CollectionKeyException("! key does not exist !");
             }
+        }
+        Movie movie = readMovieData();
+        boolean replaced = movieCollection.replaceIfLowe(Integer.parseInt(key), movie);
+        if (replaced) {
+            System.out.println("*element replaced successfully*");
         } else {
-            throw new IllegalArgumentException("! key does not exist !");
+            System.out.println("*element was not replaced*");
         }
     }
 

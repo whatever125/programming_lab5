@@ -3,7 +3,7 @@ package sources.exceptions;
 /**
  * Exception indicating that the wrong number of arguments were provided to a command.
  */
-public class WrongNumberOfArgumentsException extends IllegalArgumentException {
+public class WrongNumberOfArgumentsException extends Exception {
     /**
      * Constructs a WrongNumberOfArgumentsException with a default message.
      */

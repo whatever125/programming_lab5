@@ -3,9 +3,7 @@ package sources;
 import sources.IOHandlers.ConsoleReader;
 import sources.IOHandlers.Reader;
 import sources.commands.*;
-import sources.exceptions.EndOfInputException;
-import sources.exceptions.InvalidCommandException;
-import sources.exceptions.InvalidFileDataException;
+import sources.exceptions.*;
 
 import java.io.*;
 import java.io.File;
@@ -53,25 +51,26 @@ public class Main {
 
             System.out.println("Data loaded successfully. You are now in interactive mode\nType 'help' to see the list of commands\n");
 
+            invoker.setReader(null, consoleReader);
+
             while (!receiver.canExit()) {
                 String input = consoleReader.readLine();
                 try {
                     invoker.execute(input, null);
-                } catch (InvalidCommandException e) {
+                } catch (WrongNumberOfArgumentsException | InvalidScriptException e) {
                     System.out.println(e.getMessage());
-                } catch (StackOverflowError e) {
-                    System.out.println("! file recursion error !");
                 }
             }
 
         } catch (NullPointerException e) {
             // Handle NullPointerException thrown when LAB5 environment variable is not set
+            System.out.println(e.getMessage());
             System.out.println("! path variable is null !");
-            System.exit(1);
-        } catch (FileNotFoundException | InvalidFileDataException | EndOfInputException e) {
+            System.exit(0);
+        } catch (FileNotFoundException | InvalidFileDataException | EndOfInputException | SecurityException e) {
             // Handle exceptions thrown when there is a problem with the data file or the user input
             System.out.println(e.getMessage());
-            System.exit(1);
+            System.exit(0);
         }
     }
 }
