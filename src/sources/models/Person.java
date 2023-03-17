@@ -1,5 +1,6 @@
 package sources.models;
 
+import sources.exceptions.WrongArgumentException;
 import sources.models.helpers.PersonArgumentChecker;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class Person {
      * @param passportID the passport ID of the person
      * @throws IllegalArgumentException if any of the arguments are invalid
      */
-    public Person(String name, LocalDateTime birthday, Integer weight, String passportID) {
+    public Person(String name, LocalDateTime birthday, Integer weight, String passportID) throws WrongArgumentException {
         PersonArgumentChecker.checkArguments(name, birthday, weight, passportID);
         this.name = name;
         this.birthday = birthday;
@@ -48,7 +49,7 @@ public class Person {
      * Sets the name of the person.
      * @param name the new name of the person
      */
-    public void setName(String name) {
+    public void setName(String name) throws WrongArgumentException {
         checkName(name);
         this.name = name;
     }
@@ -65,7 +66,7 @@ public class Person {
      * Sets the birthday of the person.
      * @param birthday the new birthday of the person
      */
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDateTime birthday) throws WrongArgumentException {
         checkBirthday(birthday);
         this.birthday = birthday;
     }
@@ -82,7 +83,7 @@ public class Person {
      * Sets the weight of the person.
      * @param weight the new weight of the person
      */
-    public void setWeight(Integer weight) {
+    public void setWeight(Integer weight) throws WrongArgumentException {
         checkWeight(weight);
         this.weight = weight;
     }
@@ -99,7 +100,7 @@ public class Person {
      * Sets the passport ID of the person.
      * @param passportID the new passport ID of the person
      */
-    public void setPassportID(String passportID) {
+    public void setPassportID(String passportID) throws WrongArgumentException {
         checkPassportID(passportID);
         this.passportID = passportID;
     }

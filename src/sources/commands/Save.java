@@ -1,20 +1,20 @@
 package sources.commands;
 
+import sources.Client;
+import sources.Invoker;
 import sources.Receiver;
+import sources.exceptions.CollectionKeyException;
+import sources.exceptions.InvalidScriptException;
 import sources.exceptions.WrongNumberOfArgumentsException;
 
-public class Save implements Command {
-    private final Receiver receiver;
+public class Save extends AbstractCommand {
 
-    public Save(Receiver receiver) {
-        this.receiver = receiver;
+    public Save(Client client, Receiver receiver) {
+        super("save", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) throws WrongNumberOfArgumentsException {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
+    public void execute() {
         receiver.save();
     }
 }

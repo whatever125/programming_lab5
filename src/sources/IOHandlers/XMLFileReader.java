@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import sources.MovieCollection;
 import sources.exceptions.InvalidFileDataException;
+import sources.exceptions.WrongArgumentException;
 import sources.models.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -101,12 +102,12 @@ public class XMLFileReader implements MovieCollectionFileReader {
                     movie.setCreationDate(creationDate);
                     movieCollection.put(id, movie);
                 } else {
-                    throw new IllegalArgumentException("! movie id must be unique !");
+                    throw new WrongArgumentException("! movie id must be unique !");
                 }
             }
             movieCollection.setCreationDate(collectionCreationDate);
             return movieCollection;
-        } catch (NullPointerException | ParserConfigurationException | IOException | SAXException | IllegalArgumentException |
+        } catch (NullPointerException | ParserConfigurationException | IOException | SAXException | WrongArgumentException |
                  DateTimeParseException e) {
             System.out.println(e.getClass());
             System.out.println(Arrays.toString(e.getStackTrace()));

@@ -1,5 +1,7 @@
 package sources.models;
 
+import sources.exceptions.WrongArgumentException;
+
 import java.time.ZonedDateTime;
 import static sources.models.helpers.MovieArgumentChecker.*;
 
@@ -27,7 +29,7 @@ public class Movie implements Comparable<Movie> {
      * @param director the director of the movie
      * @throws IllegalArgumentException if any of the arguments are invalid
      */
-    public Movie(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) {
+    public Movie(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) throws WrongArgumentException {
         checkArguments(name, coordinates, oscarsCount, genre, mpaaRating, director);
         this.name = name;
         this.coordinates = coordinates;
@@ -66,7 +68,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the name of the movie.
      * @param name the name of the movie.
      */
-    public void setName(String name) {
+    public void setName(String name) throws WrongArgumentException {
         checkName(name);
         this.name = name;
     }
@@ -83,7 +85,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the coordinates of the movie.
      * @param coordinates the coordinates of the movie to set
      */
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(Coordinates coordinates) throws WrongArgumentException {
         checkCoordinates(coordinates);
         this.coordinates = coordinates;
     }
@@ -116,7 +118,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the number of Oscars won by the movie.
      * @param oscarsCount the number of Oscars won by the movie to set
      */
-    public void setOscarsCount(long oscarsCount) {
+    public void setOscarsCount(long oscarsCount) throws WrongArgumentException {
         checkOscarsCount(oscarsCount);
         this.oscarsCount = oscarsCount;
     }
@@ -133,7 +135,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the genre of the movie.
      * @param genre the genre of the movie to set
      */
-    public void setGenre(MovieGenre genre) {
+    public void setGenre(MovieGenre genre) throws WrongArgumentException {
         checkGenre(genre);
         this.genre = genre;
     }
@@ -150,7 +152,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the MPAA rating of the movie.
      * @param mpaaRating the MPAA rating of the movie to set
      */
-    public void setMpaaRating(MpaaRating mpaaRating) {
+    public void setMpaaRating(MpaaRating mpaaRating) throws WrongArgumentException {
         checkMpaaRating(mpaaRating);
         this.mpaaRating = mpaaRating;
     }
@@ -167,7 +169,7 @@ public class Movie implements Comparable<Movie> {
      * Sets the director of the movie.
      * @param director the director of the movie to set
      */
-    public void setDirector(Person director) {
+    public void setDirector(Person director) throws WrongArgumentException {
         checkDirector(director);
         this.director = director;
     }

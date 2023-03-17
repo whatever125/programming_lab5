@@ -1,20 +1,17 @@
 package sources.commands;
 
+import sources.Client;
+import sources.Invoker;
 import sources.Receiver;
 import sources.exceptions.WrongNumberOfArgumentsException;
 
-public class PrintDescending implements Command {
-    private final Receiver receiver;
-
-    public PrintDescending(Receiver receiver) {
-        this.receiver = receiver;
+public class PrintDescending extends AbstractCommand {
+    public PrintDescending(Client client, Receiver receiver) {
+        super("print_descending", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) throws WrongNumberOfArgumentsException {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
+    public void execute() {
         receiver.printDescending();
     }
 }

@@ -1,20 +1,23 @@
 package sources.commands;
 
+import sources.Client;
+import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
 
-public class Show implements Command {
-    private final Receiver receiver;
+public class Show extends AbstractCommandWithResult<String> {
+    private String result;
 
-    public Show(Receiver receiver) {
-        this.receiver = receiver;
+    public Show(Client client, Receiver receiver) {
+        super("show", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) throws WrongNumberOfArgumentsException {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
-        receiver.show();
+    public void execute() {
+        result = receiver.show();
+    }
+
+    @Override
+    public String getResult() {
+        return result;
     }
 }

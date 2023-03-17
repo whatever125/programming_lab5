@@ -1,5 +1,6 @@
 package sources.models.helpers;
 
+import sources.exceptions.WrongArgumentException;
 import sources.models.Person;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class PersonArgumentChecker extends ArgumentChecker {
      * @param weight the person's weight
      * @param passportID the person's passport ID
      */
-    public static void checkArguments(String name, LocalDateTime birthday, Integer weight, String passportID) {
+    public static void checkArguments(String name, LocalDateTime birthday, Integer weight, String passportID) throws WrongArgumentException {
         PersonArgumentChecker.checkName(name);
         PersonArgumentChecker.checkBirthday(birthday);
         PersonArgumentChecker.checkWeight(weight);
@@ -28,7 +29,7 @@ public class PersonArgumentChecker extends ArgumentChecker {
      * @param name the person's name
      * @throws IllegalArgumentException if name is null or empty
      */
-    public static void checkName(String name) {
+    public static void checkName(String name) throws WrongArgumentException {
         checkNull(name, "name");
         checkArgument(!name.equals(""), "! parameter name cannot be empty !");
     }
@@ -38,7 +39,7 @@ public class PersonArgumentChecker extends ArgumentChecker {
      * @param birthday the person's birthdate and time
      * @throws IllegalArgumentException if birthday is null
      */
-    public static void checkBirthday(LocalDateTime birthday) {
+    public static void checkBirthday(LocalDateTime birthday) throws WrongArgumentException {
         checkNull(birthday, "birthday");
     }
 
@@ -47,7 +48,7 @@ public class PersonArgumentChecker extends ArgumentChecker {
      * @param weight the person's weight
      * @throws IllegalArgumentException if weight is null or less than or equal to zero
      */
-    public static void checkWeight(Integer weight) {
+    public static void checkWeight(Integer weight) throws WrongArgumentException {
         checkNull(weight, "weight");
         checkArgument(weight > 0, "! argument weight cannot be <= 0 !");
     }
@@ -59,7 +60,7 @@ public class PersonArgumentChecker extends ArgumentChecker {
      * @throws IllegalArgumentException if passportID is less than 7 or more than 32 characters long,
      * or is not unique
      */
-    public static void checkPassportID(String passportID) {
+    public static void checkPassportID(String passportID) throws WrongArgumentException {
         if (passportID != null) {
             checkArgument(7 <= passportID.length(), "! argument passportID length cannot be < 7 !");
             checkArgument(passportID.length() <= 32, "! argument passportID length cannot be > 32 !");
