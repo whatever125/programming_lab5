@@ -45,7 +45,7 @@
 
 ### Описание хранимых в коллекции классов:
 
-```
+```java
 public class Movie {
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -73,7 +73,7 @@ public enum MovieGenre {
     WESTERN,
     MUSICAL,
     THRILLER,
-    FANTASY;
+    FANTASY
 }
 
 public enum MpaaRating {
@@ -81,6 +81,6 @@ public enum MpaaRating {
     PG,
     PG_13,
     R,
-    NC_17;
+    NC_17
 }
 ```
