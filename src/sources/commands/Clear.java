@@ -1,9 +1,7 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
 
 public class Clear extends AbstractCommand {
     public Clear(Client client, Receiver receiver) {

@@ -1,19 +1,19 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.EmptyCollectionException;
 
 public class RemoveLowerKey extends AbstractCommand {
     private final Integer key;
+
     public RemoveLowerKey(Client client, Receiver receiver, Integer key) {
         super("remove_lower_key", client, receiver);
         this.key = key;
     }
 
     @Override
-    public void execute() {
+    public void execute() throws EmptyCollectionException {
         receiver.removeLowerKey(key);
     }
 

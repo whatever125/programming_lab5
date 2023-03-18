@@ -1,10 +1,9 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.InvalidScriptException;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.EmptyCollectionException;
+import sources.exceptions.WrongArgumentException;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 
@@ -39,7 +38,7 @@ public class RemoveGreater extends AbstractCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws EmptyCollectionException, WrongArgumentException {
         receiver.removeGreater(movieName, x, y, oscarsCount, movieGenre,
                 mpaaRating, directorName, birthday, weight, passportID);
     }

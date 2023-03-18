@@ -1,7 +1,6 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
 
 public class ExecuteScript extends AbstractCommand {
@@ -13,7 +12,7 @@ public class ExecuteScript extends AbstractCommand {
     }
 
     @Override
-    public void execute()  {
+    public void execute() {
         client.executeScript(path);
     }
 

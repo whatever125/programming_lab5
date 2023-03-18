@@ -1,18 +1,18 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
+import sources.exceptions.EmptyCollectionException;
 
 public class Show extends AbstractCommandWithResult<String> {
-    private String result;
+    private String result = null;
 
     public Show(Client client, Receiver receiver) {
         super("show", client, receiver);
     }
 
     @Override
-    public void execute() {
+    public void execute() throws EmptyCollectionException {
         result = receiver.show();
     }
 

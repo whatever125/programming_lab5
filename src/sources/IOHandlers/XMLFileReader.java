@@ -28,6 +28,7 @@ public class XMLFileReader implements MovieCollectionFileReader {
 
     /**
      * Constructs an XMLFileReader object with the given file path.
+     *
      * @param path the file path of the XML file to be read
      */
     public XMLFileReader(String path) {
@@ -36,9 +37,11 @@ public class XMLFileReader implements MovieCollectionFileReader {
 
     /**
      * Reads the XML file and creates a MovieCollection object from the data.
+     *
      * @return a MovieCollection object created from the XML file data
      * @throws InvalidFileDataException if the data in the file is invalid or cannot be parsed
      */
+    // todo rewrite method using exceptions
     @Override
     public MovieCollection read() throws InvalidFileDataException {
         try {
@@ -102,12 +105,13 @@ public class XMLFileReader implements MovieCollectionFileReader {
                     movie.setCreationDate(creationDate);
                     movieCollection.put(id, movie);
                 } else {
-                    throw new WrongArgumentException("! movie id must be unique !");
+                    throw new WrongArgumentException("! movie id must be unique !"); // todo use another exception?
                 }
             }
             movieCollection.setCreationDate(collectionCreationDate);
             return movieCollection;
-        } catch (NullPointerException | ParserConfigurationException | IOException | SAXException | WrongArgumentException |
+        } catch (NullPointerException | ParserConfigurationException | IOException | SAXException |
+                 WrongArgumentException |
                  DateTimeParseException e) {
             System.out.println(e.getClass());
             System.out.println(Arrays.toString(e.getStackTrace()));

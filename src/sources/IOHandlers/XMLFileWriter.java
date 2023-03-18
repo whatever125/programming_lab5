@@ -1,9 +1,10 @@
 package sources.IOHandlers;
 
-import java.io.*;
-
 import sources.MovieCollection;
+import sources.exceptions.FilePermissionException;
 import sources.models.Movie;
+
+import java.io.*;
 import java.util.HashMap;
 
 /**
@@ -15,6 +16,7 @@ public class XMLFileWriter implements MovieCollectionFileWriter {
 
     /**
      * Constructs a new XMLFileWriter object with the specified file path.
+     *
      * @param path the path to the file to write to
      */
     public XMLFileWriter(String path) {
@@ -23,15 +25,16 @@ public class XMLFileWriter implements MovieCollectionFileWriter {
 
     /**
      * Writes the movie collection to an XML file.
+     *
      * @param movieCollection the movie collection to write to file
      * @throws SecurityException if the file cannot be written to
      */
     @Override
-    public void write(MovieCollection movieCollection) throws SecurityException {
+    public void write(MovieCollection movieCollection) throws FilePermissionException {
         HashMap<Integer, Movie> movieHashMap = movieCollection.getMovieHashMap();
         File file = new File(path);
         if (!file.canWrite()) {
-            throw new SecurityException("! no write permission for file " + path + "  !");
+            throw new FilePermissionException("! no write permission for file " + path + "  !");
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)))) {
             bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

@@ -1,11 +1,8 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.CollectionKeyException;
-import sources.exceptions.InvalidScriptException;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.FilePermissionException;
 
 public class Save extends AbstractCommand {
 
@@ -14,7 +11,7 @@ public class Save extends AbstractCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws FilePermissionException {
         receiver.save();
     }
 }

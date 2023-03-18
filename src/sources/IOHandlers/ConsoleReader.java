@@ -15,6 +15,7 @@ public class ConsoleReader implements Reader {
 
     /**
      * Reads a line of text from the standard input.
+     *
      * @return a string containing the line of text entered by the user
      * @throws EndOfInputException if the end of the input is reached unexpectedly
      */
@@ -30,6 +31,7 @@ public class ConsoleReader implements Reader {
 
     /**
      * Reads a line of text from the standard input with a custom message prompt.
+     *
      * @param message the message to display as the prompt for the user
      * @return a string containing the line of text entered by the user
      * @throws EndOfInputException if the end of the input is reached unexpectedly
@@ -46,6 +48,7 @@ public class ConsoleReader implements Reader {
 
     /**
      * Returns true if there is another line of text to be read from the standard input.
+     *
      * @return true if there is another line of text to be read, else false
      */
     @Override

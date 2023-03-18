@@ -3,7 +3,10 @@ package sources;
 import sources.models.Movie;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class represents a collection of movies.
@@ -21,7 +24,8 @@ public class MovieCollection {
 
     /**
      * Puts a movie with given id in the movieHashMap.
-     * @param id the id of the movie
+     *
+     * @param id    the id of the movie
      * @param movie the movie
      */
     public void put(Integer id, Movie movie) {
@@ -30,6 +34,7 @@ public class MovieCollection {
 
     /**
      * Returns the movie with given id from the movieHashMap.
+     *
      * @param id the id of the movie
      * @return the movie with given id
      */
@@ -39,6 +44,7 @@ public class MovieCollection {
 
     /**
      * Removes the movie with given id from the movieHashMap.
+     *
      * @param id the id of the movie
      */
     public void remove(Integer id) {
@@ -54,6 +60,7 @@ public class MovieCollection {
 
     /**
      * Returns the movieHashMap.
+     *
      * @return the movieHashMap
      */
     public HashMap<Integer, Movie> getMovieHashMap() {
@@ -62,6 +69,7 @@ public class MovieCollection {
 
     /**
      * Returns the number of movies in the movieHashMap.
+     *
      * @return the number of movies in the movieHashMap
      */
     public int length() {
@@ -70,6 +78,7 @@ public class MovieCollection {
 
     /**
      * Returns the creation date of the movie collection.
+     *
      * @return the creation date of the movie collection
      */
     public ZonedDateTime getCreationDate() {
@@ -78,6 +87,7 @@ public class MovieCollection {
 
     /**
      * Sets the creation date of the movie collection.
+     *
      * @param creationDate the creation date of the movie collection
      */
     public void setCreationDate(ZonedDateTime creationDate) {
@@ -86,6 +96,7 @@ public class MovieCollection {
 
     /**
      * Removes all movies with greater ratings than the given movie from the movieHashMap.
+     *
      * @param movie the movie with the rating to compare
      * @return the number of movies removed
      */
@@ -104,7 +115,8 @@ public class MovieCollection {
 
     /**
      * Replaces the movie with given id in the movieHashMap if its oscarCount is lower than the given movie's rating.
-     * @param id the id of the movie to replace
+     *
+     * @param id    the id of the movie to replace
      * @param movie the movie to replace with
      * @return true if the movie was replaced, false otherwise
      */
@@ -119,6 +131,7 @@ public class MovieCollection {
 
     /**
      * Removes all movies with ids less than the given id from the movieHashMap.
+     *
      * @param id the id to compare
      * @return the number of movies removed
      */
@@ -136,39 +149,38 @@ public class MovieCollection {
     }
 
     /**
-     * Prints the movies in the movie collection in ascending order of movie names.
+     * Returns the movies in the movie collection in ascending order of movie names.
+     *
+     * @return List of movies in ascending order
      */
-    public void printAscending() {
+    public List<Movie> printAscending() {
         List<Movie> movieList = new ArrayList<>(movieHashMap.values());
         Collections.sort(movieList);
-        for (Movie movie : movieList) {
-            System.out.println(movie);
-        }
+        return movieList;
     }
 
     /**
-     * Prints the movies in the movie collection in descending order of movie names.
+     * Returns the movies in the movie collection in descending order of movie names.
+     *
+     * @return List of movies in descending order
      */
-    public void printDescending() {
+    public List<Movie> printDescending() {
         List<Movie> movieList = new ArrayList<>(movieHashMap.values());
         Collections.sort(movieList);
         Collections.reverse(movieList);
-        for (Movie movie : movieList) {
-            System.out.println(movie);
-        }
+        return movieList;
     }
 
     /**
      * Prints the movies in the movie collection in descending order of Oscars count.
      * The output format is "Oscars count - Movie name".
+     *
+     * @return List of movies
      */
-    public void printFieldDescendingOscarsCount() {
+    public List<Movie> printFieldDescendingOscarsCount() {
         List<Movie> movieList = new ArrayList<>(movieHashMap.values());
         Collections.sort(movieList);
         Collections.reverse(movieList);
-        System.out.println("Oscars count - Movie name");
-        for (Movie movie : movieList) {
-            System.out.println(movie.getOscarsCount() + " - " + movie.getName());
-        }
+        return movieList;
     }
 }

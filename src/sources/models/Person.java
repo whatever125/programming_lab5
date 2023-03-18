@@ -20,9 +20,10 @@ public class Person {
 
     /**
      * Constructs a Person object with the given name, birthday, weight, and passport ID.
-     * @param name the name of the person
-     * @param birthday the birthday of the person
-     * @param weight the weight of the person
+     *
+     * @param name       the name of the person
+     * @param birthday   the birthday of the person
+     * @param weight     the weight of the person
      * @param passportID the passport ID of the person
      * @throws IllegalArgumentException if any of the arguments are invalid
      */
@@ -39,6 +40,7 @@ public class Person {
 
     /**
      * Gets the name of the person.
+     *
      * @return the name of the person
      */
     public String getName() {
@@ -47,6 +49,7 @@ public class Person {
 
     /**
      * Sets the name of the person.
+     *
      * @param name the new name of the person
      */
     public void setName(String name) throws WrongArgumentException {
@@ -56,6 +59,7 @@ public class Person {
 
     /**
      * Gets the birthday of the person.
+     *
      * @return the birthday of the person
      */
     public LocalDateTime getBirthday() {
@@ -64,6 +68,7 @@ public class Person {
 
     /**
      * Sets the birthday of the person.
+     *
      * @param birthday the new birthday of the person
      */
     public void setBirthday(LocalDateTime birthday) throws WrongArgumentException {
@@ -73,6 +78,7 @@ public class Person {
 
     /**
      * Gets the weight of the person.
+     *
      * @return the weight of the person
      */
     public Integer getWeight() {
@@ -81,6 +87,7 @@ public class Person {
 
     /**
      * Sets the weight of the person.
+     *
      * @param weight the new weight of the person
      */
     public void setWeight(Integer weight) throws WrongArgumentException {
@@ -90,6 +97,7 @@ public class Person {
 
     /**
      * Gets the passport ID of the person.
+     *
      * @return the passport ID of the person
      */
     public String getPassportID() {
@@ -98,6 +106,7 @@ public class Person {
 
     /**
      * Sets the passport ID of the person.
+     *
      * @param passportID the new passport ID of the person
      */
     public void setPassportID(String passportID) throws WrongArgumentException {
@@ -107,6 +116,7 @@ public class Person {
 
     /**
      * Returns a boolean indicating if the given passport ID is already in use by another person.
+     *
      * @param passportID the passport ID to check
      * @return true if the passport ID is already in use, else false
      */
@@ -116,6 +126,7 @@ public class Person {
 
     /**
      * Returns a string representation of the Person object, including its name, birthday, weight, and passport ID
+     *
      * @return a string representation of the Person object
      */
     @Override

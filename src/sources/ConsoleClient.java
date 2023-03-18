@@ -1,10 +1,13 @@
 package sources;
 
 import sources.IOHandlers.ConsoleReader;
+import sources.IOHandlers.CustomFileReader;
 import sources.IOHandlers.Reader;
 import sources.commands.*;
 import sources.exceptions.*;
-import sources.models.*;
+import sources.models.Movie;
+import sources.models.MovieGenre;
+import sources.models.MpaaRating;
 import sources.models.helpers.MovieArgumentChecker;
 import sources.models.helpers.PersonArgumentChecker;
 
@@ -14,14 +17,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
 public class ConsoleClient implements Client {
     Invoker invoker = new Invoker();
     Receiver receiver;
-    Reader consoleReader = new ConsoleReader();
     private final Stack<String> pathStack = new Stack<>();
     private boolean canExit = false;
 
@@ -33,18 +35,21 @@ public class ConsoleClient implements Client {
 
             // Check that file exists and has read/write permissions
             if (!file.exists()) throw new FileNotFoundException("! file " + path + " not found !");
-            if (!file.canRead() || !file.canWrite()) throw new SecurityException("! no read and/or write permission for file " + path + "  !");
+            if (!file.canRead() || !file.canWrite())
+                throw new FilePermissionException("! no read and/or write permission for file " + path + "  !");
 
             // Initialize Invoker, Receiver and Reader
             invoker = new Invoker();
             receiver = new Receiver(path);
+            Reader consoleReader = new ConsoleReader();
 
             System.out.println("Data loaded successfully. You are now in interactive mode\nType 'help' to see the list of commands\n");
 
             while (!canExit) {
                 try {
-                    readCommand();
-                } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException e) {
+                    readCommand(consoleReader);
+                } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException |
+                         WrongArgumentException | EmptyCollectionException | InvalidScriptException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -54,100 +59,114 @@ public class ConsoleClient implements Client {
             System.out.println(e.getMessage());
             System.out.println("! path variable is null !");
             System.exit(0);
-        } catch (FileNotFoundException | InvalidFileDataException | EndOfInputException | SecurityException e) {
+        } catch (FileNotFoundException | InvalidFileDataException | EndOfInputException | FilePermissionException e) {
             // Handle exceptions thrown when there is a problem with the data file or the user input
             System.out.println(e.getMessage());
             System.exit(0);
         }
     }
 
-    private void readCommand() throws InvalidCommandException, CollectionKeyException, WrongNumberOfArgumentsException {
-        String input = consoleReader.readLine();
-        if (input.trim().startsWith("//")) {
+    private void readCommand(Reader reader) throws InvalidCommandException, CollectionKeyException,
+            WrongNumberOfArgumentsException, WrongArgumentException, EmptyCollectionException,
+            FilePermissionException, InvalidScriptException {
+        String input = reader.readLine().trim();
+        if (input.startsWith("//") || input.equals("")) {
             return;
         }
-        String[] inputArray = input.trim().split(" +");
+        String[] inputArray = input.split("\s+");
         String commandName = inputArray[0].toLowerCase();
 
         String[] args = new String[inputArray.length - 1];
         System.arraycopy(inputArray, 1, args, 0, inputArray.length - 1);
 
         switch (commandName) {
-            case "" -> {
-                return;
-            }
             case "help" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 invoker.execute(new Help(this, receiver));
             }
             case "print" -> {
+                if (args.length != 0)
+                    throw new WrongNumberOfArgumentsException();
                 invoker.printCommandHistory();
             }
             case "info" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.execute(new Info(this, receiver));
+                String result = invoker.executeAndReturn(new Info(this, receiver));
+                System.out.println(result);
             }
             case "show" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.execute(new Show(this, receiver));
+                String result = invoker.executeAndReturn(new Show(this, receiver));
+                System.out.println(result);
             }
             case "insert" -> {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
-                    String movieName = readMovieName(consoleReader);
-                    Integer x = readX(consoleReader);
-                    Integer y = readY(consoleReader);
-                    long oscarsCount = readOscrasCount(consoleReader);
-                    MovieGenre movieGenre = readMovieGenre(consoleReader);
-                    MpaaRating mpaaRating = readMpaaRating(consoleReader);
-                    String directorName = readDirectorName(consoleReader);
-                    LocalDateTime birthday = readBirthday(consoleReader);
-                    Integer weight = readWeight(consoleReader);
-                    String passportID = readPassportID(consoleReader);
+                    String movieName = readMovieName(reader);
+                    Integer x = readX(reader);
+                    Integer y = readY(reader);
+                    long oscarsCount = readOscrasCount(reader);
+                    MovieGenre movieGenre = readMovieGenre(reader);
+                    MpaaRating mpaaRating = readMpaaRating(reader);
+                    String directorName = readDirectorName(reader);
+                    LocalDateTime birthday = readBirthday(reader);
+                    Integer weight = readWeight(reader);
+                    String passportID = readPassportID(reader);
                     invoker.execute(new Insert(this, receiver, key, movieName, x, y, oscarsCount,
                             movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
-                    // todo not an integer
-                } catch (InvalidScriptException e) {
-                    throw new RuntimeException(e); //todo
+                    String errorMessage = "! not an integer !";
+                    if (inScriptMode()) {
+                        throw new InvalidScriptException(errorMessage);
+                    } else {
+                        System.out.println(errorMessage);
+                    }
                 }
             }
             case "update" -> {
-                if (args.length != 0)
+                if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
-                    String movieName = readMovieName(consoleReader);
-                    Integer x = readX(consoleReader);
-                    Integer y = readY(consoleReader);
-                    long oscarsCount = readOscrasCount(consoleReader);
-                    MovieGenre movieGenre = readMovieGenre(consoleReader);
-                    MpaaRating mpaaRating = readMpaaRating(consoleReader);
-                    String directorName = readDirectorName(consoleReader);
-                    LocalDateTime birthday = readBirthday(consoleReader);
-                    Integer weight = readWeight(consoleReader);
-                    String passportID = readPassportID(consoleReader);
+                    String movieName = readMovieName(reader);
+                    Integer x = readX(reader);
+                    Integer y = readY(reader);
+                    long oscarsCount = readOscrasCount(reader);
+                    MovieGenre movieGenre = readMovieGenre(reader);
+                    MpaaRating mpaaRating = readMpaaRating(reader);
+                    String directorName = readDirectorName(reader);
+                    LocalDateTime birthday = readBirthday(reader);
+                    Integer weight = readWeight(reader);
+                    String passportID = readPassportID(reader);
                     invoker.execute(new Update(this, receiver, key, movieName, x, y, oscarsCount,
                             movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
-                    // todo not an integer
-                } catch (InvalidScriptException e) {
-                    throw new RuntimeException(e); //todo
+                    String errorMessage = "! not an integer !";
+                    if (inScriptMode()) {
+                        throw new InvalidScriptException(errorMessage);
+                    } else {
+                        System.out.println(errorMessage);
+                    }
                 }
             }
             case "remove_key" -> {
-                if (args.length != 0)
+                if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
                     invoker.execute(new RemoveKey(this, receiver, key));
                 } catch (NumberFormatException e) {
-                    // todo not an integer
+                    String errorMessage = "! not an integer !";
+                    if (inScriptMode()) {
+                        throw new InvalidScriptException(errorMessage);
+                    } else {
+                        System.out.println(errorMessage);
+                    }
                 }
             }
             case "clear" -> {
@@ -161,7 +180,7 @@ public class ConsoleClient implements Client {
                 invoker.execute(new Save(this, receiver));
             }
             case "execute_script" -> {
-                if (args.length != 0)
+                if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 String path = args[0];
                 invoker.execute(new ExecuteScript(this, receiver, path));
@@ -174,107 +193,101 @@ public class ConsoleClient implements Client {
             case "remove_greater" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                try {
-                    String movieName = readMovieName(consoleReader);
-                    Integer x = readX(consoleReader);
-                    Integer y = readY(consoleReader);
-                    long oscarsCount = readOscrasCount(consoleReader);
-                    MovieGenre movieGenre = readMovieGenre(consoleReader);
-                    MpaaRating mpaaRating = readMpaaRating(consoleReader);
-                    String directorName = readDirectorName(consoleReader);
-                    LocalDateTime birthday = readBirthday(consoleReader);
-                    Integer weight = readWeight(consoleReader);
-                    String passportID = readPassportID(consoleReader);
-                    invoker.execute(new RemoveGreater(this, receiver, movieName, x, y,
-                            oscarsCount, movieGenre, mpaaRating, directorName, birthday, weight, passportID));
-                } catch (InvalidScriptException e) {
-                    throw new RuntimeException(e);
-                }
+                String movieName = readMovieName(reader);
+                Integer x = readX(reader);
+                Integer y = readY(reader);
+                long oscarsCount = readOscrasCount(reader);
+                MovieGenre movieGenre = readMovieGenre(reader);
+                MpaaRating mpaaRating = readMpaaRating(reader);
+                String directorName = readDirectorName(reader);
+                LocalDateTime birthday = readBirthday(reader);
+                Integer weight = readWeight(reader);
+                String passportID = readPassportID(reader);
+                invoker.execute(new RemoveGreater(this, receiver, movieName, x, y,
+                        oscarsCount, movieGenre, mpaaRating, directorName, birthday, weight, passportID));
             }
             case "replace_if_lowe" -> {
-                if (args.length != 0)
+                if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
-                    String movieName = readMovieName(consoleReader);
-                    Integer x = readX(consoleReader);
-                    Integer y = readY(consoleReader);
-                    long oscarsCount = readOscrasCount(consoleReader);
-                    MovieGenre movieGenre = readMovieGenre(consoleReader);
-                    MpaaRating mpaaRating = readMpaaRating(consoleReader);
-                    String directorName = readDirectorName(consoleReader);
-                    LocalDateTime birthday = readBirthday(consoleReader);
-                    Integer weight = readWeight(consoleReader);
-                    String passportID = readPassportID(consoleReader);
+                    String movieName = readMovieName(reader);
+                    Integer x = readX(reader);
+                    Integer y = readY(reader);
+                    long oscarsCount = readOscrasCount(reader);
+                    MovieGenre movieGenre = readMovieGenre(reader);
+                    MpaaRating mpaaRating = readMpaaRating(reader);
+                    String directorName = readDirectorName(reader);
+                    LocalDateTime birthday = readBirthday(reader);
+                    Integer weight = readWeight(reader);
+                    String passportID = readPassportID(reader);
                     invoker.execute(new ReplaceIfLowe(this, receiver, key, movieName, x, y,
                             oscarsCount, movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
-                    // todo not an integer
-                } catch (InvalidScriptException e) {
-                    throw new RuntimeException(e);
+                    String errorMessage = "! not an integer !";
+                    if (inScriptMode()) {
+                        throw new InvalidScriptException(errorMessage);
+                    } else {
+                        System.out.println(errorMessage);
+                    }
                 }
             }
             case "remove_lower_key" -> {
-                if (args.length != 0)
+                if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
                     invoker.execute(new RemoveLowerKey(this, receiver, key));
                 } catch (NumberFormatException e) {
-                    // todo not an integer
+                    String errorMessage = "! not an integer !";
+                    if (inScriptMode()) {
+                        throw new InvalidScriptException(errorMessage);
+                    } else {
+                        System.out.println(errorMessage);
+                    }
                 }
             }
             case "print_ascending" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.execute(new PrintAscending(this, receiver));
+                List<Movie> movieList = invoker.executeAndReturn(new PrintAscending(this, receiver));
+                for (Movie movie : movieList) {
+                    System.out.println(movie);
+                }
             }
             case "print_descending" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.execute(new PrintDescending(this, receiver));
+                List<Movie> movieList = invoker.executeAndReturn(new PrintDescending(this, receiver));
+                for (Movie movie : movieList) {
+                    System.out.println(movie);
+                }
             }
             case "print_field_descending_oscars_count" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.execute(new PrintFieldDescendingOscarsCount(this, receiver));
+                List<Movie> movieList = invoker.executeAndReturn(new PrintFieldDescendingOscarsCount(this, receiver));
+                System.out.println("Oscars count - Movie name");
+                for (Movie movie : movieList) {
+                    System.out.println(movie.getOscarsCount() + " - " + movie.getName());
+                }
             }
 
-
-            default -> {
-                throw new InvalidCommandException(commandName);
-            }
+            default -> throw new InvalidCommandException(commandName);
         }
-//        } catch (NumberFormatException e) {
-//            // TODO: unnecessary??
-//            System.out.println("! enter an integer key !");
-//        } catch (CollectionKeyException e) {
-//            System.out.println(e.getMessage());
-//        } finally {
-//            pathStack.pop();
-//        }
-//
-//
-//        try {
-//
-//        } catch (WrongNumberOfArgumentsException | InvalidScriptException e) {
-//            System.out.println(e.getMessage());
-//        }
     }
 
     private String readMovieName(Reader reader) throws InvalidScriptException {
         String movieName = null;
-        String input = null;
         while (movieName == null) {
             try {
-                input = reader.readLine("Enter movie name");
+                String input = reader.readLine("Enter movie name");
                 movieName = input.trim();
                 MovieArgumentChecker.checkName(movieName);
             } catch (WrongArgumentException e) {
                 movieName = null;
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, e.getMessage());
-                    // todo return
+                    throw new InvalidScriptException(e.getMessage());
                 } else {
                     System.out.println(e.getMessage());
                 }
@@ -286,18 +299,18 @@ public class ConsoleClient implements Client {
     private Integer readX(Reader reader) throws InvalidScriptException {
         Integer x = null;
         boolean xSuccess = false;
-        String input = null;
         while (!xSuccess) {
             try {
-                input = reader.readLine("Enter X coordinate");
+                String input = reader.readLine("Enter X coordinate");
                 String xInput = input.trim();
                 x = Integer.parseInt(xInput);
                 xSuccess = true;
             } catch (NumberFormatException e) {
+                String errorMessage = "! not an integer !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! enter an integer !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! enter an integer !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -307,18 +320,18 @@ public class ConsoleClient implements Client {
     private Integer readY(Reader reader) throws InvalidScriptException {
         Integer y = null;
         boolean ySuccess = false;
-        String input = null;
         while (!ySuccess) {
             try {
-                input = reader.readLine("Enter X coordinate");
+                String input = reader.readLine("Enter X coordinate");
                 String xInput = input.trim();
                 y = Integer.parseInt(xInput);
                 ySuccess = true;
             } catch (NumberFormatException e) {
+                String errorMessage = "! not an integer !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! enter an integer !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! enter an integer !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -326,21 +339,21 @@ public class ConsoleClient implements Client {
     }
 
     private long readOscrasCount(Reader reader) throws InvalidScriptException {
-        String input = null;
         long oscarsCount = 0;
         boolean oscarsCountSuccess = false;
         while (!oscarsCountSuccess) {
             try {
-                input = reader.readLine("Enter oscars count");
+                String input = reader.readLine("Enter oscars count");
                 String oscarsCountInput = input.trim();
                 oscarsCount = Long.parseLong(oscarsCountInput);
                 MovieArgumentChecker.checkOscarsCount(oscarsCount);
                 oscarsCountSuccess = true;
             } catch (WrongArgumentException e) {
+                String errorMessage = "! not an integer !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! enter an integer !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! enter an integer !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -348,7 +361,6 @@ public class ConsoleClient implements Client {
     }
 
     private MovieGenre readMovieGenre(Reader reader) throws InvalidScriptException {
-        String input = null;
         MovieGenre movieGenre = null;
 
         StringBuilder message = new StringBuilder("Enter movie genre (");
@@ -360,15 +372,16 @@ public class ConsoleClient implements Client {
         message.append(")");
 
         while (movieGenre == null) {
-            input = reader.readLine(String.valueOf(message));
+            String input = reader.readLine(String.valueOf(message));
             String movieGenreInput = input.trim();
             try {
                 movieGenre = MovieGenre.valueOf(movieGenreInput.toUpperCase());
             } catch (IllegalArgumentException e) {
+                String errorMessage = "! wrong movie genre !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! wrong movie genre !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! wrong movie genre !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -376,7 +389,6 @@ public class ConsoleClient implements Client {
     }
 
     private MpaaRating readMpaaRating(Reader reader) throws InvalidScriptException {
-        String input = null;
         MpaaRating mpaaRating = null;
 
         StringBuilder message = new StringBuilder("Enter MPAA rating (");
@@ -388,15 +400,16 @@ public class ConsoleClient implements Client {
         message.append(")");
 
         while (mpaaRating == null) {
-            input = reader.readLine(String.valueOf(message));
+            String input = reader.readLine(String.valueOf(message));
             String mpaaRatingInput = input.trim();
             try {
                 mpaaRating = MpaaRating.valueOf(mpaaRatingInput.toUpperCase());
             } catch (IllegalArgumentException e) {
+                String errorMessage = "! wrong MPAA rating !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! wrong MPAA rating !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! wrong MPAA rating !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -404,17 +417,16 @@ public class ConsoleClient implements Client {
     }
 
     private String readDirectorName(Reader reader) throws InvalidScriptException {
-        String input = null;
         String directorName = null;
         while (directorName == null) {
             try {
-                input = reader.readLine("Enter director name");
+                String input = reader.readLine("Enter director name");
                 directorName = input.trim();
                 PersonArgumentChecker.checkName(directorName);
             } catch (WrongArgumentException e) {
                 directorName = null;
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, e.getMessage());
+                    throw new InvalidScriptException(e.getMessage());
                 } else {
                     System.out.println(e.getMessage());
                 }
@@ -424,18 +436,18 @@ public class ConsoleClient implements Client {
     }
 
     private LocalDateTime readBirthday(Reader reader) throws InvalidScriptException {
-        String input = null;
         LocalDateTime birthday = null;
         while (birthday == null) {
             try {
-                input = reader.readLine("Enter director birthday in DD.MM.YYYY format");
+                String input = reader.readLine("Enter director birthday in DD.MM.YYYY format");
                 String birthdayInput = input.trim();
                 birthday = LocalDate.parse(birthdayInput, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay();
             } catch (DateTimeParseException e) {
+                String errorMessage = "! wrong date format !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! wrong date format !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! wrong date format !");
+                    System.out.println(errorMessage);
                 }
             }
         }
@@ -443,12 +455,11 @@ public class ConsoleClient implements Client {
     }
 
     private Integer readWeight(Reader reader) throws InvalidScriptException {
-        String input = null;
         Integer weight = null;
         boolean weightSuccess = false;
         while (!weightSuccess) {
             try {
-                input = reader.readLine("Enter director weight");
+                String input = reader.readLine("Enter director weight");
                 String weightInput = input.trim();
                 if (!weightInput.equals("")) {
                     weight = Integer.parseInt(weightInput);
@@ -456,14 +467,15 @@ public class ConsoleClient implements Client {
                 PersonArgumentChecker.checkWeight(weight);
                 weightSuccess = true;
             } catch (NumberFormatException e) {
+                String errorMessage = "! not an integer !";
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, "! enter an integer !");
+                    throw new InvalidScriptException(errorMessage);
                 } else {
-                    System.out.println("! enter an integer !");
+                    System.out.println(errorMessage);
                 }
             } catch (WrongArgumentException e) {
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, e.getMessage());
+                    throw new InvalidScriptException(e.getMessage());
                 } else {
                     System.out.println(e.getMessage());
                 }
@@ -473,12 +485,11 @@ public class ConsoleClient implements Client {
     }
 
     private String readPassportID(Reader reader) throws InvalidScriptException {
-        String input = null;
         boolean passportIDSuccess = false;
         String passportID = null;
         while (!passportIDSuccess) {
             try {
-                input = reader.readLine("Enter director passport ID");
+                String input = reader.readLine("Enter director passport ID");
                 passportID = input.trim();
                 if (Objects.equals(passportID, "")) {
                     passportID = null;
@@ -487,7 +498,7 @@ public class ConsoleClient implements Client {
                 passportIDSuccess = true;
             } catch (WrongArgumentException e) {
                 if (inScriptMode()) {
-                    throw new InvalidScriptException(getPath(), input, e.getMessage());
+                    throw new InvalidScriptException(e.getMessage());
                 } else {
                     System.out.println(e.getMessage());
                 }
@@ -525,16 +536,48 @@ public class ConsoleClient implements Client {
 
     @Override
     public void executeScript(String path) {
-        // todo
+        try {
+            if (pathStack.contains(path))
+                throw new FileRecursionError(path);
+            File file = new File(path);
+            if (!file.exists())
+                throw new FileNotFoundException("! file " + path + " not found !");
+            if (!file.canRead() || !file.canWrite())
+                throw new FilePermissionException("! no read and/or write permission for file " + path + "  !");
+
+            Reader reader = new CustomFileReader(path);
+            pathStack.push(path);
+            int lineCounter = 1;
+            while (reader.hasNextLine()) {
+                try {
+                    readCommand(reader);
+                } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException |
+                         WrongArgumentException | EmptyCollectionException | InvalidScriptException e) {
+                    System.out.println(printPathStack() + ":" + lineCounter + ": " + e.getMessage());
+                } finally {
+                    lineCounter += 1;
+                }
+            }
+            pathStack.pop();
+        } catch (FileRecursionError | FileNotFoundException | FilePermissionException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private String printPathStack() {
+        StringBuilder returnString = new StringBuilder();
+        for (String path : pathStack) {
+            returnString.append(path).append(":");
+        }
+        returnString.deleteCharAt(returnString.length() - 1);
+        return returnString.toString();
     }
 
     private boolean inScriptMode() {
-        //todo
-        return true;
+        return !pathStack.empty();
     }
 
     private String getPath() {
-        //todo
-        return null;
+        return pathStack.peek();
     }
 }

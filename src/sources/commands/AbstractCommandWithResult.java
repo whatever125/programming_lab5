@@ -1,7 +1,6 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
 
 public abstract class AbstractCommandWithResult<T> extends AbstractCommand implements CommandWithResult<T> {

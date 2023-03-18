@@ -3,6 +3,7 @@ package sources.models;
 import sources.exceptions.WrongArgumentException;
 
 import java.time.ZonedDateTime;
+
 import static sources.models.helpers.MovieArgumentChecker.*;
 
 /**
@@ -21,12 +22,12 @@ public class Movie implements Comparable<Movie> {
     /**
      * Constructs a new Movie object with the specified parameters.
      *
-     * @param name the name of the movie
+     * @param name        the name of the movie
      * @param coordinates the coordinates of the movie
      * @param oscarsCount the number of Oscars won by the movie
-     * @param genre the genre of the movie
-     * @param mpaaRating the MPAA rating of the movie
-     * @param director the director of the movie
+     * @param genre       the genre of the movie
+     * @param mpaaRating  the MPAA rating of the movie
+     * @param director    the director of the movie
      * @throws IllegalArgumentException if any of the arguments are invalid
      */
     public Movie(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) throws WrongArgumentException {
@@ -38,10 +39,12 @@ public class Movie implements Comparable<Movie> {
         this.genre = genre;
         this.mpaaRating = mpaaRating;
         this.director = director;
+        // todo id
     }
 
     /**
      * Returns the ID of the movie.
+     *
      * @return the ID of the movie
      */
     public Integer getId() {
@@ -50,6 +53,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the ID of the movie.
+     *
      * @param id the ID of the movie
      */
     public void setId(Integer id) {
@@ -58,6 +62,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the name of the movie.
+     *
      * @return the name of the movie
      */
     public String getName() {
@@ -66,6 +71,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the name of the movie.
+     *
      * @param name the name of the movie.
      */
     public void setName(String name) throws WrongArgumentException {
@@ -75,6 +81,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the coordinates of the movie.
+     *
      * @return the coordinates of the movie
      */
     public Coordinates getCoordinates() {
@@ -83,6 +90,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the coordinates of the movie.
+     *
      * @param coordinates the coordinates of the movie to set
      */
     public void setCoordinates(Coordinates coordinates) throws WrongArgumentException {
@@ -92,6 +100,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the creation date of the movie.
+     *
      * @return the creation date of the movie
      */
     public ZonedDateTime getCreationDate() {
@@ -100,6 +109,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the creation date of the movie.
+     *
      * @param creationDate the creation date of the movie to set
      */
     public void setCreationDate(ZonedDateTime creationDate) {
@@ -108,6 +118,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the number of Oscars won by the movie.
+     *
      * @return the number of Oscars won by the movie
      */
     public long getOscarsCount() {
@@ -116,6 +127,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the number of Oscars won by the movie.
+     *
      * @param oscarsCount the number of Oscars won by the movie to set
      */
     public void setOscarsCount(long oscarsCount) throws WrongArgumentException {
@@ -125,6 +137,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the genre of the movie.
+     *
      * @return the genre of the movie
      */
     public MovieGenre getGenre() {
@@ -133,6 +146,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the genre of the movie.
+     *
      * @param genre the genre of the movie to set
      */
     public void setGenre(MovieGenre genre) throws WrongArgumentException {
@@ -142,6 +156,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the MPAA rating of the movie.
+     *
      * @return the MPAA rating of the movie
      */
     public MpaaRating getMpaaRating() {
@@ -150,6 +165,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the MPAA rating of the movie.
+     *
      * @param mpaaRating the MPAA rating of the movie to set
      */
     public void setMpaaRating(MpaaRating mpaaRating) throws WrongArgumentException {
@@ -159,6 +175,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Returns the director of the movie.
+     *
      * @return the director of the movie
      */
     public Person getDirector() {
@@ -167,6 +184,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Sets the director of the movie.
+     *
      * @param director the director of the movie to set
      */
     public void setDirector(Person director) throws WrongArgumentException {
@@ -176,6 +194,7 @@ public class Movie implements Comparable<Movie> {
 
     /**
      * Compares this movie to another movie based on their number of Oscars won.
+     *
      * @param movie the movie to compare to
      * @return a negative integer, zero, or a positive integer as this movie has fewer, equal, or more Oscars than the other movie
      */
@@ -195,7 +214,8 @@ public class Movie implements Comparable<Movie> {
      * - genre: the genre of the movie
      * - mpaaRating: the MPAA rating of the movie
      * - director: the director of the movie
-     @return a String representation of the Movie object
+     *
+     * @return a String representation of the Movie object
      */
     @Override
     public String toString() {

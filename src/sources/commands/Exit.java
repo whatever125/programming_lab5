@@ -1,7 +1,6 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
 
 public class Exit extends AbstractCommand {

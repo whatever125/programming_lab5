@@ -1,9 +1,9 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
 import sources.exceptions.CollectionKeyException;
+import sources.exceptions.WrongArgumentException;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 
@@ -40,7 +40,7 @@ public class Update extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws CollectionKeyException {
+    public void execute() throws CollectionKeyException, WrongArgumentException {
         receiver.update(key, movieName, x, y, oscarsCount, movieGenre,
                 mpaaRating, directorName, birthday, weight, passportID);
     }

@@ -15,6 +15,7 @@ public class CustomFileReader implements Reader {
 
     /**
      * Constructs a CustomFileReader object with the specified file path.
+     *
      * @param path The path of the file to read from.
      * @throws FileNotFoundException If the file cannot be found.
      */
@@ -25,6 +26,7 @@ public class CustomFileReader implements Reader {
 
     /**
      * Reads a line from the input file.
+     *
      * @return the next line of text from the file.
      */
     @Override
@@ -34,6 +36,7 @@ public class CustomFileReader implements Reader {
 
     /**
      * Reads a line from the input file and displays a prompt to the user.
+     *
      * @param message the message to display to the user as a prompt.
      * @return the next line of text from the file.
      */
@@ -44,6 +47,7 @@ public class CustomFileReader implements Reader {
 
     /**
      * Checks whether there is another line of text to read from the input file.
+     *
      * @return True if there is another line of text, false otherwise.
      */
     @Override

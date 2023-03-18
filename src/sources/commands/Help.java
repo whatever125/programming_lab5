@@ -1,9 +1,7 @@
 package sources.commands;
 
 import sources.Client;
-import sources.Invoker;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
 
 public class Help extends AbstractCommand {
     public Help(Client client, Receiver receiver) {

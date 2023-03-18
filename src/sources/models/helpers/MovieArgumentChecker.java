@@ -14,12 +14,13 @@ import java.util.Objects;
 public class MovieArgumentChecker extends ArgumentChecker {
     /**
      * Check all the arguments passed to a Movie object's constructor
-     * @param name - the name of the movie
+     *
+     * @param name        - the name of the movie
      * @param coordinates - the location of the movie in the globe
      * @param oscarsCount - the number of oscars the movie has won
-     * @param genre - the genre of the movie
-     * @param mpaaRating - the rating of the movie
-     * @param director - the director of the movie
+     * @param genre       - the genre of the movie
+     * @param mpaaRating  - the rating of the movie
+     * @param director    - the director of the movie
      */
     public static void checkArguments(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) throws WrongArgumentException {
         MovieArgumentChecker.checkName(name);
@@ -32,6 +33,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the ID argument.
+     *
      * @param id - the ID of the movie
      */
     // TODO: unnecessary
@@ -43,6 +45,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the name argument.
+     *
      * @param name - the name of the movie
      */
     public static void checkName(String name) throws WrongArgumentException {
@@ -52,6 +55,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the coordinates argument.
+     *
      * @param coordinates - the coordinates of the movie
      */
     public static void checkCoordinates(Coordinates coordinates) throws WrongArgumentException {
@@ -60,6 +64,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the oscarsCount argument.
+     *
      * @param oscarsCount - the number of oscars the movie has won
      */
     public static void checkOscarsCount(long oscarsCount) throws WrongArgumentException {
@@ -68,6 +73,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the genre argument.
+     *
      * @param genre - the genre of the movie
      */
     public static void checkGenre(MovieGenre genre) throws WrongArgumentException {
@@ -76,6 +82,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the mpaaRating argument.
+     *
      * @param mpaaRating - the rating of the movie
      */
     public static void checkMpaaRating(MpaaRating mpaaRating) throws WrongArgumentException {
@@ -84,6 +91,7 @@ public class MovieArgumentChecker extends ArgumentChecker {
 
     /**
      * Check the validity of the director argument.
+     *
      * @param director - the director of the movie
      */
     public static void checkDirector(Person director) throws WrongArgumentException {

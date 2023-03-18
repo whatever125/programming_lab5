@@ -6,12 +6,14 @@ package sources.IOHandlers;
 public interface Reader {
     /**
      * Reads the next line of input data.
+     *
      * @return The next line of input data as a String
      */
     String readLine();
 
     /**
      * Prompts the user with a message and reads the next line of input data.
+     *
      * @param message The message to prompt the user with.
      * @return The next line of input data as a String
      */
@@ -19,6 +21,7 @@ public interface Reader {
 
     /**
      * Returns true if there is at least one more line of input data available to read.
+     *
      * @return True if there is at least one more line of input data available to read, else false.
      */
     boolean hasNextLine();
