@@ -1,20 +1,17 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.io.FilePermissionException;
 
-public class Save implements Command {
-    private final Receiver receiver;
+public class Save extends AbstractCommand {
 
-    public Save(Receiver receiver) {
-        this.receiver = receiver;
+    public Save(Client client, Receiver receiver) {
+        super("save", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
+    public void execute() {
         receiver.save();
     }
 }

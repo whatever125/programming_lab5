@@ -1,20 +1,26 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.receiver.EmptyCollectionException;
+import sources.models.Movie;
 
-public class PrintFieldDescendingOscarsCount implements Command {
-    private final Receiver receiver;
+import java.util.List;
 
-    public PrintFieldDescendingOscarsCount(Receiver receiver) {
-        this.receiver = receiver;
+public class PrintFieldDescendingOscarsCount extends AbstractCommandWithResult<List<Movie>> {
+    private List<Movie> result = null;
+
+    public PrintFieldDescendingOscarsCount(Client client, Receiver receiver) {
+        super("print_field_descending_oscars_count", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
-        receiver.printFieldDescendingOscarsCount();
+    public void execute() throws EmptyCollectionException {
+        result = receiver.printFieldDescendingOscarsCount();
+    }
+
+    @Override
+    public List<Movie> getResult() {
+        return result;
     }
 }

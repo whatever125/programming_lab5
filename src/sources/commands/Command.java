@@ -1,14 +1,9 @@
 package sources.commands;
 
-/**
- * The Command interface represents a command that can be executed.
- * Takes the {@link sources.Receiver} as a parameter and executes it's methods.
- */
+import sources.exceptions.receiver.CollectionKeyException;
+import sources.exceptions.receiver.EmptyCollectionException;
+import sources.exceptions.io.WrongArgumentException;
+
 public interface Command {
-    /**
-     * Executes the command with the specified arguments.
-     * @param args the array of String arguments for the command
-     * @throws IllegalArgumentException if the arguments are invalid for the command
-     */
-    void execute(String[] args) throws IllegalArgumentException;
+    void execute() throws CollectionKeyException, WrongArgumentException, EmptyCollectionException;
 }

@@ -1,20 +1,26 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.receiver.EmptyCollectionException;
+import sources.models.Movie;
 
-public class PrintDescending implements Command {
-    private final Receiver receiver;
+import java.util.List;
 
-    public PrintDescending(Receiver receiver) {
-        this.receiver = receiver;
+public class PrintDescending extends AbstractCommandWithResult<List<Movie>> {
+    private List<Movie> result = null;
+
+    public PrintDescending(Client client, Receiver receiver) {
+        super("print_descending", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
-        receiver.printDescending();
+    public void execute() throws EmptyCollectionException {
+        result = receiver.printDescending();
+    }
+
+    @Override
+    public List<Movie> getResult() {
+        return result;
     }
 }

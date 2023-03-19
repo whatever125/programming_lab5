@@ -1,20 +1,25 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
 
-public class ExecuteScript implements Command {
-    private final Receiver receiver;
+public class ExecuteScript extends AbstractCommand {
+    private final String path;
 
-    public ExecuteScript(Receiver receiver) {
-        this.receiver = receiver;
+    public ExecuteScript(Client client, Receiver receiver, String path) {
+        super("execute_script", client, receiver);
+        this.path = path;
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 1) {
-            throw new WrongNumberOfArgumentsException();
-        }
-        receiver.executeScript(args[0]);
+    public void execute() {
+        client.executeScript(path);
+    }
+
+    @Override
+    public String toString() {
+        return name + " {" +
+                "path='" + path + '\'' +
+                '}';
     }
 }

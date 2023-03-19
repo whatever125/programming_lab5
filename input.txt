@@ -1,2 +1,12 @@
+insert 1
+name
+1
+1
+1
+western
+g
+name
+10.07.2004
+70
+1234567891111
 show
-info

@@ -1,20 +1,15 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
 
-public class Clear implements Command {
-    private final Receiver receiver;
-
-    public Clear(Receiver receiver) {
-        this.receiver = receiver;
+public class Clear extends AbstractCommand {
+    public Clear(Client client, Receiver receiver) {
+        super("clear", client, receiver);
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 0) {
-            throw new WrongNumberOfArgumentsException();
-        }
+    public void execute() {
         receiver.clear();
     }
 }

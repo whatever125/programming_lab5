@@ -1,20 +1,26 @@
 package sources.commands;
 
+import sources.Client;
 import sources.Receiver;
-import sources.exceptions.WrongNumberOfArgumentsException;
+import sources.exceptions.receiver.CollectionKeyException;
 
-public class RemoveKey implements Command {
-    private final Receiver receiver;
+public class RemoveKey extends AbstractCommand {
+    private final Integer key;
 
-    public RemoveKey(Receiver receiver) {
-        this.receiver = receiver;
+    public RemoveKey(Client client, Receiver receiver, Integer key) {
+        super("remove_key", client, receiver);
+        this.key = key;
     }
 
     @Override
-    public void execute(String[] args) {
-        if (args.length != 1) {
-            throw new WrongNumberOfArgumentsException();
-        }
-        receiver.removeKey(args[0]);
+    public void execute() throws CollectionKeyException {
+        receiver.removeKey(key);
+    }
+
+    @Override
+    public String toString() {
+        return name + " {" +
+                "key=" + key +
+                '}';
     }
 }
