@@ -2,7 +2,7 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.EmptyCollectionException;
+import sources.exceptions.receiver.EmptyCollectionException;
 import sources.models.Movie;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.FilePermissionException;
+import sources.exceptions.io.FilePermissionException;
 
 public class Save extends AbstractCommand {
 
@@ -11,7 +11,7 @@ public class Save extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws FilePermissionException {
+    public void execute() {
         receiver.save();
     }
 }

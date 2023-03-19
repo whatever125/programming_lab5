@@ -2,7 +2,7 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.EmptyCollectionException;
+import sources.exceptions.receiver.EmptyCollectionException;
 
 public class RemoveLowerKey extends AbstractCommand {
     private final Integer key;

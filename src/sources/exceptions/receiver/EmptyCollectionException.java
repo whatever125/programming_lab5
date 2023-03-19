@@ -1,4 +1,4 @@
-package sources.exceptions;
+package sources.exceptions.receiver;
 
 public class EmptyCollectionException extends Exception {
     public EmptyCollectionException() {

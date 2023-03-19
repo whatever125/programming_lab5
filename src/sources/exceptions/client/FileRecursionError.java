@@ -1,4 +1,4 @@
-package sources.exceptions;
+package sources.exceptions.client;
 
 
 public class FileRecursionError extends Exception {

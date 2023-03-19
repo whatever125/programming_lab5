@@ -2,7 +2,7 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.CollectionKeyException;
+import sources.exceptions.receiver.CollectionKeyException;
 
 public class RemoveKey extends AbstractCommand {
     private final Integer key;

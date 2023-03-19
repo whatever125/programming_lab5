@@ -1,12 +1,18 @@
 package sources;
 
-import sources.IOHandlers.MovieCollectionFileReader;
-import sources.IOHandlers.MovieCollectionFileWriter;
-import sources.IOHandlers.XMLFileReader;
-import sources.IOHandlers.XMLFileWriter;
-import sources.exceptions.*;
+import sources.IOHandlers.receiver.MovieCollectionFileReader;
+import sources.IOHandlers.receiver.MovieCollectionFileWriter;
+import sources.IOHandlers.receiver.MovieCollectionXMLFileReader;
+import sources.IOHandlers.receiver.MovieCollectionXMLFileWriter;
+import sources.exceptions.io.CustomIOException;
+import sources.exceptions.io.FilePermissionException;
+import sources.exceptions.io.InvalidFileDataException;
+import sources.exceptions.io.WrongArgumentException;
+import sources.exceptions.receiver.CollectionKeyException;
+import sources.exceptions.receiver.EmptyCollectionException;
 import sources.models.*;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,11 +20,17 @@ import java.util.List;
 public class Receiver {
     private final MovieCollection movieCollection;
     private final String path;
+    MovieCollectionFileReader xmlFileReader;
+    MovieCollectionFileWriter xmlFileWriter;
 
-    public Receiver(String path) throws InvalidFileDataException {
-        MovieCollectionFileReader xmlFileReader = new XMLFileReader(path);
-        movieCollection = xmlFileReader.read();
+    public Receiver() throws InvalidFileDataException, FileNotFoundException, FilePermissionException {
+        String path = System.getenv("LAB5");
+
         this.path = path;
+        this.xmlFileReader = new MovieCollectionXMLFileReader(path);
+        this.xmlFileWriter = new MovieCollectionXMLFileWriter(path);
+
+        this.movieCollection = xmlFileReader.read();
     }
 
     public String info() {
@@ -43,7 +55,7 @@ public class Receiver {
                        MpaaRating mpaaRating, String directorName, LocalDateTime birthday, Integer weight,
                        String passportID) throws CollectionKeyException, WrongArgumentException {
         if (movieCollection.get(key) != null)
-            throw new CollectionKeyException("! key already exists !");
+            throw new CollectionKeyException("key already exists");
         Movie movie = new Movie(movieName, new Coordinates(x, y), oscarsCount, movieGenre,
                 mpaaRating, new Person(directorName, birthday, weight, passportID));
         movieCollection.put(key, movie);
@@ -54,7 +66,7 @@ public class Receiver {
                        MpaaRating mpaaRating, String directorName, LocalDateTime birthday, Integer weight,
                        String passportID) throws CollectionKeyException, WrongArgumentException {
         if (movieCollection.get(key) == null)
-            throw new CollectionKeyException("! key does not exist !");
+            throw new CollectionKeyException("key does not exist");
         Movie movie = new Movie(movieName, new Coordinates(x, y), oscarsCount, movieGenre,
                 mpaaRating, new Person(directorName, birthday, weight, passportID));
         movie.setId(key);
@@ -64,7 +76,7 @@ public class Receiver {
 
     public void removeKey(Integer key) throws CollectionKeyException {
         if (movieCollection.get(key) == null)
-            throw new CollectionKeyException("! key does not exist !");
+            throw new CollectionKeyException("key does not exist");
         movieCollection.remove(key);
         System.out.println("*element removed successfully*");
     }
@@ -74,10 +86,13 @@ public class Receiver {
         System.out.println("*collection cleared successfully*");
     }
 
-    public void save() throws FilePermissionException {
-        MovieCollectionFileWriter xmlFileWriter = new XMLFileWriter(path);
-        xmlFileWriter.write(movieCollection);
-        System.out.println("*collection saved successfully*");
+    public void save() {
+        try {
+            xmlFileWriter.write(movieCollection);
+            System.out.println("*collection saved successfully*");
+        } catch (FileNotFoundException | FilePermissionException | CustomIOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void removeGreater(String movieName, Integer x, Integer y, long oscarsCount, MovieGenre movieGenre,
@@ -98,7 +113,7 @@ public class Receiver {
                               MovieGenre movieGenre, MpaaRating mpaaRating, String directorName, LocalDateTime birthday,
                               Integer weight, String passportID) throws CollectionKeyException, WrongArgumentException {
         if (movieCollection.get(key) == null)
-            throw new CollectionKeyException("! key does not exist !");
+            throw new CollectionKeyException("key does not exist");
         Movie movie = new Movie(movieName, new Coordinates(x, y), oscarsCount, movieGenre,
                 mpaaRating, new Person(directorName, birthday, weight, passportID));
         boolean replaced = movieCollection.replaceIfLowe(key, movie);

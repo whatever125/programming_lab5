@@ -1,57 +1,51 @@
-package sources.IOHandlers;
+package sources.IOHandlers.receiver;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import sources.MovieCollection;
-import sources.exceptions.InvalidFileDataException;
-import sources.exceptions.WrongArgumentException;
+import sources.exceptions.io.FilePermissionException;
+import sources.exceptions.io.InvalidFileDataException;
+import sources.exceptions.io.WrongArgumentException;
 import sources.models.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
-/**
- * A class for reading XML files and creating a MovieCollection object from the data.
- */
-public class XMLFileReader implements MovieCollectionFileReader {
+public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
     private final String path;
 
-    /**
-     * Constructs an XMLFileReader object with the given file path.
-     *
-     * @param path the file path of the XML file to be read
-     */
-    public XMLFileReader(String path) {
+    public MovieCollectionXMLFileReader(String path) {
         this.path = path;
     }
 
-    /**
-     * Reads the XML file and creates a MovieCollection object from the data.
-     *
-     * @return a MovieCollection object created from the XML file data
-     * @throws InvalidFileDataException if the data in the file is invalid or cannot be parsed
-     */
-    // todo rewrite method using exceptions
     @Override
-    public MovieCollection read() throws InvalidFileDataException {
+    public MovieCollection read() throws FileNotFoundException, FilePermissionException, InvalidFileDataException {
+        checkFile();
+        String attributeName = null;
+        int i = -1;
         try {
             MovieCollection movieCollection = new MovieCollection();
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
+            // Empty file
             File file = new File(path);
             if (file.length() == 0) {
+                System.out.println("Created empty movie collection.");
                 movieCollection.setCreationDate(ZonedDateTime.now());
                 return movieCollection;
             }
@@ -59,37 +53,65 @@ public class XMLFileReader implements MovieCollectionFileReader {
             Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
+            attributeName = "collectionCreationDate";
             String collectionCreationDateInput = document.getDocumentElement().getAttribute("creationDate");
             ZonedDateTime collectionCreationDate = ZonedDateTime.parse(collectionCreationDateInput);
 
             NodeList movieElements = document.getDocumentElement().getElementsByTagName("movie");
-            for (int i = 0; i < movieElements.getLength(); i++) {
+            for (i = 0; i < movieElements.getLength(); i++) {
                 Element movieElement = (Element) movieElements.item(i);
 
+                attributeName = "id";
                 String idInput = movieElement.getElementsByTagName("id").item(0).getTextContent().trim();
                 int id = Integer.parseInt(idInput);
+
+                attributeName = "movieName";
                 String movieName = movieElement.getElementsByTagName("name").item(0).getTextContent().trim();
 
+                attributeName = "coordinates";
                 Element coordinatesInput = (Element) movieElement.getElementsByTagName("coordinates").item(0);
+                attributeName = "x";
                 String xInput = coordinatesInput.getElementsByTagName("x").item(0).getTextContent().trim();
                 int x = Integer.parseInt(xInput);
+                attributeName = "y";
                 String yInput = coordinatesInput.getElementsByTagName("y").item(0).getTextContent().trim();
                 int y = Integer.parseInt(yInput);
                 Coordinates coordinates = new Coordinates(x, y);
 
+                attributeName = "creationDate";
                 String creationDateInput = movieElement.getElementsByTagName("creationDate").item(0).getTextContent().trim();
                 ZonedDateTime creationDate = ZonedDateTime.parse(creationDateInput);
+
+                attributeName = "oscarsCount";
                 String oscarsCountInput = movieElement.getElementsByTagName("oscarsCount").item(0).getTextContent().trim();
                 long oscarsCount = Long.parseLong(oscarsCountInput);
-                String genreInput = movieElement.getElementsByTagName("genre").item(0).getTextContent().trim();
-                MovieGenre movieGenre = MovieGenre.valueOf(genreInput);
-                String mpaaRatingInput = movieElement.getElementsByTagName("mpaaRating").item(0).getTextContent().trim();
-                MpaaRating mpaaRating = MpaaRating.valueOf(mpaaRatingInput);
 
+                attributeName = "genre";
+                String genreInput = movieElement.getElementsByTagName("genre").item(0).getTextContent().trim();
+                MovieGenre movieGenre;
+                try {
+                    movieGenre = MovieGenre.valueOf(genreInput);
+                } catch (IllegalArgumentException e) {
+                    throw new WrongArgumentException("wrong movie genre");
+                }
+
+                attributeName = "mpaaRating";
+                String mpaaRatingInput = movieElement.getElementsByTagName("mpaaRating").item(0).getTextContent().trim();
+                MpaaRating mpaaRating;
+                try {
+                    mpaaRating = MpaaRating.valueOf(mpaaRatingInput);
+                } catch (IllegalArgumentException e) {
+                    throw new WrongArgumentException("wrong MPAA rating");
+                }
+
+                attributeName = "director";
                 Element directorInput = (Element) movieElement.getElementsByTagName("director").item(0);
+                attributeName = "directorName";
                 String directorNameInput = directorInput.getElementsByTagName("name").item(0).getTextContent().trim();
+                attributeName = "birthday";
                 String birthdayInput = directorInput.getElementsByTagName("birthday").item(0).getTextContent().trim();
                 LocalDateTime birthday = LocalDateTime.parse(birthdayInput);
+                attributeName = "weight";
                 String weightInput = directorInput.getElementsByTagName("weight").item(0).getTextContent().trim();
                 Integer weight = Integer.parseInt(weightInput);
                 Node passportIDInput = directorInput.getElementsByTagName("passportID").item(0);
@@ -105,17 +127,42 @@ public class XMLFileReader implements MovieCollectionFileReader {
                     movie.setCreationDate(creationDate);
                     movieCollection.put(id, movie);
                 } else {
-                    throw new WrongArgumentException("! movie id must be unique !"); // todo use another exception?
+                    throw new WrongArgumentException("movie id must be unique");
                 }
             }
             movieCollection.setCreationDate(collectionCreationDate);
             return movieCollection;
-        } catch (NullPointerException | ParserConfigurationException | IOException | SAXException |
-                 WrongArgumentException |
-                 DateTimeParseException e) {
+        } catch (NullPointerException e) {
+            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " is null");
+        } catch (DateTimeParseException e) {
+            if (i < 0) {
+                throw new InvalidFileDataException(attributeName + " is invalid or null");
+            } else {
+                throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " is invalid or null");
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new InvalidFileDataException("unsupported encoding: " + e.getMessage());
+        } catch (SAXParseException e) {
+            throw new InvalidFileDataException("XML parse error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            throw new InvalidFileDataException(attributeName + " must be an integer");
+        } catch (WrongArgumentException e) {
+            StringBuilder errorMessage = new StringBuilder(e.getMessage());
+            errorMessage.delete(0, 2);
+            errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
+            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + errorMessage);
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             System.out.println(e.getClass());
             System.out.println(Arrays.toString(e.getStackTrace()));
             throw new InvalidFileDataException(e.getMessage());
         }
+    }
+
+    private void checkFile() throws FileNotFoundException, FilePermissionException {
+        File file = new File(path);
+        if (!file.exists())
+            throw new FileNotFoundException("! file " + path + " not found !");
+        if (!file.canRead())
+            throw new FilePermissionException("! no read permission for file " + path + "  !");
     }
 }
