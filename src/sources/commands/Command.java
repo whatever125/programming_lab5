@@ -1,9 +1,8 @@
 package sources.commands;
 
-import sources.exceptions.receiver.CollectionKeyException;
-import sources.exceptions.receiver.EmptyCollectionException;
 import sources.exceptions.io.WrongArgumentException;
+import sources.exceptions.receiver.CollectionKeyException;
 
 public interface Command {
-    void execute() throws CollectionKeyException, WrongArgumentException, EmptyCollectionException;
+    void execute() throws CollectionKeyException, WrongArgumentException;
 }

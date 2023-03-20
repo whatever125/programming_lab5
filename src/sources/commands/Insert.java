@@ -2,8 +2,8 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.receiver.CollectionKeyException;
 import sources.exceptions.io.WrongArgumentException;
+import sources.exceptions.receiver.CollectionKeyException;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 

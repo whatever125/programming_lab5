@@ -1,12 +1,15 @@
 package sources.models;
 
+import sources.MovieCollection;
 import sources.exceptions.io.WrongArgumentException;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 import static sources.models.helpers.MovieArgumentChecker.*;
 
 public class Movie implements Comparable<Movie> {
+    private static Integer nextID = 1;
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -16,7 +19,8 @@ public class Movie implements Comparable<Movie> {
     private MpaaRating mpaaRating; //Поле не может быть null
     private Person director; //Поле не может быть null
 
-    public Movie(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) throws WrongArgumentException {
+    public Movie(String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating,
+                 Person director) throws WrongArgumentException {
         checkArguments(name, coordinates, oscarsCount, genre, mpaaRating, director);
         this.name = name;
         this.coordinates = coordinates;
@@ -25,15 +29,37 @@ public class Movie implements Comparable<Movie> {
         this.genre = genre;
         this.mpaaRating = mpaaRating;
         this.director = director;
-        // todo id
     }
 
-    public Integer getId() {
+    public Movie(Integer id, String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating,
+                 Person director) throws WrongArgumentException {
+        checkArguments(id, name, coordinates, oscarsCount, genre, mpaaRating, director);
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = ZonedDateTime.now();
+        this.oscarsCount = oscarsCount;
+        this.genre = genre;
+        this.mpaaRating = mpaaRating;
+        this.director = director;
+    }
+
+    public static void updateNextId(MovieCollection movieCollection) {
+        int maxID = movieCollection
+                .getMovieHashMap().values()
+                .stream().filter(Objects::nonNull)
+                .map(Movie::getID)
+                .mapToInt(Integer::intValue).max().orElse(0);
+        nextID = maxID + 1;
+    }
+
+    public Integer getID() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setID() {
+        this.id = nextID;
+        nextID += 1;
     }
 
     public String getName() {

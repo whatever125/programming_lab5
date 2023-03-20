@@ -54,40 +54,41 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
             document.getDocumentElement().normalize();
 
             attributeName = "collectionCreationDate";
-            String collectionCreationDateInput = document.getDocumentElement().getAttribute("creationDate");
+            String collectionCreationDateInput = document.getDocumentElement().getAttribute(attributeName);
             ZonedDateTime collectionCreationDate = ZonedDateTime.parse(collectionCreationDateInput);
 
-            NodeList movieElements = document.getDocumentElement().getElementsByTagName("movie");
+            attributeName = "movie";
+            NodeList movieElements = document.getDocumentElement().getElementsByTagName(attributeName);
             for (i = 0; i < movieElements.getLength(); i++) {
                 Element movieElement = (Element) movieElements.item(i);
 
                 attributeName = "id";
-                String idInput = movieElement.getElementsByTagName("id").item(0).getTextContent().trim();
+                String idInput = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 int id = Integer.parseInt(idInput);
 
                 attributeName = "movieName";
-                String movieName = movieElement.getElementsByTagName("name").item(0).getTextContent().trim();
+                String movieName = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
 
                 attributeName = "coordinates";
-                Element coordinatesInput = (Element) movieElement.getElementsByTagName("coordinates").item(0);
+                Element coordinatesInput = (Element) movieElement.getElementsByTagName(attributeName).item(0);
                 attributeName = "x";
-                String xInput = coordinatesInput.getElementsByTagName("x").item(0).getTextContent().trim();
+                String xInput = coordinatesInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 int x = Integer.parseInt(xInput);
                 attributeName = "y";
-                String yInput = coordinatesInput.getElementsByTagName("y").item(0).getTextContent().trim();
+                String yInput = coordinatesInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 int y = Integer.parseInt(yInput);
                 Coordinates coordinates = new Coordinates(x, y);
 
-                attributeName = "creationDate";
-                String creationDateInput = movieElement.getElementsByTagName("creationDate").item(0).getTextContent().trim();
+                attributeName = "movieCreationDate";
+                String creationDateInput = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 ZonedDateTime creationDate = ZonedDateTime.parse(creationDateInput);
 
                 attributeName = "oscarsCount";
-                String oscarsCountInput = movieElement.getElementsByTagName("oscarsCount").item(0).getTextContent().trim();
+                String oscarsCountInput = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 long oscarsCount = Long.parseLong(oscarsCountInput);
 
                 attributeName = "genre";
-                String genreInput = movieElement.getElementsByTagName("genre").item(0).getTextContent().trim();
+                String genreInput = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 MovieGenre movieGenre;
                 try {
                     movieGenre = MovieGenre.valueOf(genreInput);
@@ -96,7 +97,7 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
                 }
 
                 attributeName = "mpaaRating";
-                String mpaaRatingInput = movieElement.getElementsByTagName("mpaaRating").item(0).getTextContent().trim();
+                String mpaaRatingInput = movieElement.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 MpaaRating mpaaRating;
                 try {
                     mpaaRating = MpaaRating.valueOf(mpaaRatingInput);
@@ -105,32 +106,32 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
                 }
 
                 attributeName = "director";
-                Element directorInput = (Element) movieElement.getElementsByTagName("director").item(0);
+                Element directorInput = (Element) movieElement.getElementsByTagName(attributeName).item(0);
                 attributeName = "directorName";
-                String directorNameInput = directorInput.getElementsByTagName("name").item(0).getTextContent().trim();
+                String directorNameInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 attributeName = "birthday";
-                String birthdayInput = directorInput.getElementsByTagName("birthday").item(0).getTextContent().trim();
+                String birthdayInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 LocalDateTime birthday = LocalDateTime.parse(birthdayInput);
                 attributeName = "weight";
-                String weightInput = directorInput.getElementsByTagName("weight").item(0).getTextContent().trim();
+                String weightInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 Integer weight = Integer.parseInt(weightInput);
-                Node passportIDInput = directorInput.getElementsByTagName("passportID").item(0);
+                attributeName = "passportID";
+                Node passportIDInput = directorInput.getElementsByTagName(attributeName).item(0);
                 String passportID = null;
                 if (passportIDInput != null && !passportIDInput.getTextContent().trim().equals("")) {
                     passportID = passportIDInput.getTextContent().trim();
                 }
                 Person director = new Person(directorNameInput, birthday, weight, passportID);
 
-                if (movieCollection.get(id) == null) {
-                    Movie movie = new Movie(movieName, coordinates, oscarsCount, movieGenre, mpaaRating, director);
-                    movie.setId(id);
-                    movie.setCreationDate(creationDate);
-                    movieCollection.put(id, movie);
-                } else {
+                if (movieCollection.getMovieByID(id) != null)
                     throw new WrongArgumentException("movie id must be unique");
-                }
+
+                Movie movie = new Movie(id, movieName, coordinates, oscarsCount, movieGenre, mpaaRating, director);
+                movie.setCreationDate(creationDate);
+                movieCollection.put(id, movie);
             }
             movieCollection.setCreationDate(collectionCreationDate);
+            Movie.updateNextId(movieCollection);
             return movieCollection;
         } catch (NullPointerException e) {
             throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " is null");
@@ -145,7 +146,7 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
         } catch (SAXParseException e) {
             throw new InvalidFileDataException("XML parse error: " + e.getMessage());
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException(attributeName + " must be an integer");
+            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " must be an integer");
         } catch (WrongArgumentException e) {
             StringBuilder errorMessage = new StringBuilder(e.getMessage());
             errorMessage.delete(0, 2);

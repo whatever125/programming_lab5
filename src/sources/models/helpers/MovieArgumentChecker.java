@@ -18,11 +18,19 @@ public class MovieArgumentChecker extends ArgumentChecker {
         MovieArgumentChecker.checkDirector(director);
     }
 
-    // TODO: unnecessary
+    public static void checkArguments(Integer id, String name, Coordinates coordinates, long oscarsCount, MovieGenre genre, MpaaRating mpaaRating, Person director) throws WrongArgumentException {
+        MovieArgumentChecker.checkID(id);
+        MovieArgumentChecker.checkName(name);
+        MovieArgumentChecker.checkCoordinates(coordinates);
+        MovieArgumentChecker.checkOscarsCount(oscarsCount);
+        MovieArgumentChecker.checkGenre(genre);
+        MovieArgumentChecker.checkMpaaRating(mpaaRating);
+        MovieArgumentChecker.checkDirector(director);
+    }
+
     public static void checkID(Integer id) throws WrongArgumentException {
         checkNull(id, "id");
         checkArgument(id > 0, "argument id cannot be <= 0");
-        // TODO: check unique
     }
 
     public static void checkName(String name) throws WrongArgumentException {

@@ -2,7 +2,6 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.receiver.EmptyCollectionException;
 import sources.models.Movie;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class PrintDescending extends AbstractCommandWithResult<List<Movie>> {
     }
 
     @Override
-    public void execute() throws EmptyCollectionException {
+    public void execute() {
         result = receiver.printDescending();
     }
 

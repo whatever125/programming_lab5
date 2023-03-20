@@ -2,7 +2,6 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.receiver.EmptyCollectionException;
 
 public class Show extends AbstractCommandWithResult<String> {
     private String result = null;
@@ -12,7 +11,7 @@ public class Show extends AbstractCommandWithResult<String> {
     }
 
     @Override
-    public void execute() throws EmptyCollectionException {
+    public void execute() {
         result = receiver.show();
     }
 

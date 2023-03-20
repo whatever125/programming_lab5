@@ -2,7 +2,6 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.io.FilePermissionException;
 
 public class Save extends AbstractCommand {
 

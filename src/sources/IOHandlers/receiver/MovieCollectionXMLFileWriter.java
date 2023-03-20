@@ -25,7 +25,7 @@ public class MovieCollectionXMLFileWriter implements MovieCollectionFileWriter {
             for (Movie movie : movieHashMap.values()) {
                 String indent = "    ";
                 bufferedWriter.write(indent.repeat(1) + "<movie>\n");
-                bufferedWriter.write(indent.repeat(2) + "<id>" + movie.getId() + "</id>\n");
+                bufferedWriter.write(indent.repeat(2) + "<id>" + movie.getID() + "</id>\n");
                 bufferedWriter.write(indent.repeat(2) + "<name>" + movie.getName() + "</name>\n");
                 bufferedWriter.write(indent.repeat(2) + "<coordinates>\n");
                 bufferedWriter.write(indent.repeat(3) + "<x>" + movie.getCoordinates().getX() + "</x>\n");

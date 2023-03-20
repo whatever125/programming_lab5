@@ -3,10 +3,7 @@ package sources;
 import sources.models.Movie;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class MovieCollection {
     private HashMap<Integer, Movie> movieHashMap = new HashMap<>();
@@ -16,16 +13,24 @@ public class MovieCollection {
         this.creationDate = ZonedDateTime.now();
     }
 
-    public void put(Integer id, Movie movie) {
-        movieHashMap.put(id, movie);
+    public void put(Integer key, Movie movie) {
+        movieHashMap.put(key, movie);
     }
 
-    public Movie get(Integer id) {
-        return movieHashMap.get(id);
+    public Movie getMovieByKey(Integer key) {
+        return movieHashMap.get(key);
     }
 
-    public void remove(Integer id) {
-        movieHashMap.remove(id);
+    public Movie getMovieByID(Integer id) {
+        for (Movie movie : movieHashMap.values()) {
+            if (Objects.equals(movie.getID(), id))
+                return movie;
+        }
+        return null;
+    }
+
+    public void remove(Integer key) {
+        movieHashMap.remove(key);
     }
 
     public void clear() {
@@ -52,7 +57,7 @@ public class MovieCollection {
         HashMap<Integer, Movie> newMovieHashMap = new HashMap<>(movieHashMap);
         int count = 0;
         for (Integer key : movieHashMap.keySet()) {
-            if (get(key).compareTo(movie) > 0) {
+            if (getMovieByKey(key).compareTo(movie) > 0) {
                 newMovieHashMap.remove(key);
                 count += 1;
             }
@@ -62,8 +67,7 @@ public class MovieCollection {
     }
 
     public boolean replaceIfLowe(Integer id, Movie movie) {
-        if (get(id).compareTo(movie) > 0) {
-            movie.setId(id);
+        if (getMovieByKey(id).compareTo(movie) > 0) {
             put(id, movie);
             return true;
         }

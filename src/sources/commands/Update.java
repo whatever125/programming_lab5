@@ -2,15 +2,15 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.receiver.CollectionKeyException;
 import sources.exceptions.io.WrongArgumentException;
+import sources.exceptions.receiver.CollectionKeyException;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 
 import java.time.LocalDateTime;
 
 public class Update extends AbstractCommand {
-    private final Integer key;
+    private final Integer id;
     private final String movieName;
     private final Integer x;
     private final Integer y;
@@ -22,11 +22,11 @@ public class Update extends AbstractCommand {
     private final Integer weight;
     private final String passportID;
 
-    public Update(Client client, Receiver receiver, Integer key, String movieName, Integer x, Integer y,
+    public Update(Client client, Receiver receiver, Integer id, String movieName, Integer x, Integer y,
                   long oscarsCount, MovieGenre movieGenre, MpaaRating mpaaRating, String directorName,
                   LocalDateTime birthday, Integer weight, String passportID) {
         super("update", client, receiver);
-        this.key = key;
+        this.id = id;
         this.movieName = movieName;
         this.x = x;
         this.y = y;
@@ -41,14 +41,14 @@ public class Update extends AbstractCommand {
 
     @Override
     public void execute() throws CollectionKeyException, WrongArgumentException {
-        receiver.update(key, movieName, x, y, oscarsCount, movieGenre,
+        receiver.update(id, movieName, x, y, oscarsCount, movieGenre,
                 mpaaRating, directorName, birthday, weight, passportID);
     }
 
     @Override
     public String toString() {
         return name + " {" +
-                "key=" + key +
+                "id=" + id +
                 ", movieName='" + movieName + '\'' +
                 ", x=" + x +
                 ", y=" + y +

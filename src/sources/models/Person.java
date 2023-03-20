@@ -1,7 +1,6 @@
 package sources.models;
 
 import sources.exceptions.io.WrongArgumentException;
-import sources.models.helpers.PersonArgumentChecker;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ public class Person {
     private static final HashSet<String> passportIDSet = new HashSet<>();
 
     public Person(String name, LocalDateTime birthday, Integer weight, String passportID) throws WrongArgumentException {
-        PersonArgumentChecker.checkArguments(name, birthday, weight, passportID);
+        checkArguments(name, birthday, weight, passportID);
         this.name = name;
         this.birthday = birthday;
         this.weight = weight;

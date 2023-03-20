@@ -2,7 +2,6 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
-import sources.exceptions.receiver.EmptyCollectionException;
 
 public class RemoveLowerKey extends AbstractCommand {
     private final Integer key;
@@ -13,7 +12,7 @@ public class RemoveLowerKey extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws EmptyCollectionException {
+    public void execute() {
         receiver.removeLowerKey(key);
     }
 

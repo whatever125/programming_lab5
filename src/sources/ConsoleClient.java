@@ -1,8 +1,8 @@
 package sources;
 
+import sources.IOHandlers.client.BasicReader;
 import sources.IOHandlers.client.CustomConsoleReader;
 import sources.IOHandlers.client.CustomFileReader;
-import sources.IOHandlers.client.BasicReader;
 import sources.commands.*;
 import sources.exceptions.client.FileRecursionError;
 import sources.exceptions.client.InvalidCommandException;
@@ -13,7 +13,6 @@ import sources.exceptions.io.FilePermissionException;
 import sources.exceptions.io.InvalidFileDataException;
 import sources.exceptions.io.WrongArgumentException;
 import sources.exceptions.receiver.CollectionKeyException;
-import sources.exceptions.receiver.EmptyCollectionException;
 import sources.models.Movie;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
@@ -48,7 +47,7 @@ public class ConsoleClient implements Client {
                 try {
                     readAndExecuteCommand(consoleReader);
                 } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException |
-                         WrongArgumentException | EmptyCollectionException | InvalidScriptException e) {
+                         WrongArgumentException | InvalidScriptException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -66,7 +65,7 @@ public class ConsoleClient implements Client {
     }
 
     private void readAndExecuteCommand(BasicReader basicReader) throws InvalidCommandException, CollectionKeyException,
-            WrongNumberOfArgumentsException, WrongArgumentException, EmptyCollectionException, InvalidScriptException {
+            WrongNumberOfArgumentsException, WrongArgumentException, InvalidScriptException {
         String input = basicReader.readLine().trim();
         if (input.startsWith("//") || input.equals("")) {
             return;
@@ -130,7 +129,7 @@ public class ConsoleClient implements Client {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
-                    Integer key = Integer.parseInt(args[0]);
+                    Integer id = Integer.parseInt(args[0]);
                     String movieName = readMovieName(basicReader);
                     Integer x = readX(basicReader);
                     Integer y = readY(basicReader);
@@ -141,7 +140,7 @@ public class ConsoleClient implements Client {
                     LocalDateTime birthday = readBirthday(basicReader);
                     Integer weight = readWeight(basicReader);
                     String passportID = readPassportID(basicReader);
-                    invoker.execute(new Update(this, receiver, key, movieName, x, y, oscarsCount,
+                    invoker.execute(new Update(this, receiver, id, movieName, x, y, oscarsCount,
                             movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
                     String errorMessage = "! not an integer !";
@@ -543,6 +542,7 @@ public class ConsoleClient implements Client {
     public void executeScript(String path) {
         try {
             if (pathStack.contains(path))
+                // todo check with paths
                 throw new FileRecursionError(path);
 
             BasicReader basicReader = new CustomFileReader(path);
@@ -553,7 +553,7 @@ public class ConsoleClient implements Client {
                     lineCounter += 1;
                     readAndExecuteCommand(basicReader);
                 } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException |
-                         WrongArgumentException | EmptyCollectionException | InvalidScriptException e) {
+                         WrongArgumentException | InvalidScriptException e) {
                     System.out.println(printPathStack() + ":" + lineCounter + ": " + e.getMessage());
                 }
             }
@@ -574,9 +574,5 @@ public class ConsoleClient implements Client {
 
     private boolean inScriptMode() {
         return !pathStack.empty();
-    }
-
-    private String getPath() {
-        return pathStack.peek();
     }
 }
