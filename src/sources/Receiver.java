@@ -14,6 +14,7 @@ import sources.models.*;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 
 public class Receiver {
@@ -32,26 +33,19 @@ public class Receiver {
 
     public String info() {
         return "*Collection info*\n" +
-                "- Type of collection: Hashmap of Movies\n" +
-                "- Date of initializing: " + movieCollection.getCreationDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + "\n" +
-                "- Number of elements: " + movieCollection.length();
+                "- Type of collection   : Hashmap of Movies\n" +
+                "- Date of initializing : " + movieCollection.getCreationDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) + "\n" +
+                "- Number of elements   : " + movieCollection.length();
     }
 
-    public String show() {
-        // todo send to client
-        StringBuilder result = new StringBuilder("*elements of collection*\n");
-        for (Movie movie : movieCollection.getMovieHashMap().values()) {
-            result.append(movie);
-            result.append("\n");
-        }
-        result.deleteCharAt(result.length() - 1);
-        return result.toString();
+    public HashMap<Integer, Movie> show() {
+        return movieCollection.getMovieHashMap();
     }
 
     public void insert(Integer key, String movieName, Integer x, Integer y, long oscarsCount, MovieGenre movieGenre,
                        MpaaRating mpaaRating, String directorName, LocalDateTime birthday, Integer weight,
                        String passportID) throws CollectionKeyException, WrongArgumentException {
-        if (movieCollection.getMovieByKey(key) != null)
+        if (movieCollection.getElementByKey(key) != null)
             throw new CollectionKeyException("key already exists");
         Movie movie = new Movie(movieName, new Coordinates(x, y), oscarsCount, movieGenre,
                 mpaaRating, new Person(directorName, birthday, weight, passportID));
@@ -63,7 +57,7 @@ public class Receiver {
     public void update(Integer id, String movieName, Integer x, Integer y, long oscarsCount, MovieGenre movieGenre,
                        MpaaRating mpaaRating, String directorName, LocalDateTime birthday, Integer weight,
                        String passportID) throws CollectionKeyException, WrongArgumentException {
-        Movie movie = movieCollection.getMovieByID(id);
+        Movie movie = movieCollection.getElementByID(id);
         if (movie == null)
             throw new CollectionKeyException("id does not exist");
         movie.setName(movieName);
@@ -76,7 +70,7 @@ public class Receiver {
     }
 
     public void removeKey(Integer key) throws CollectionKeyException {
-        if (movieCollection.getMovieByKey(key) == null)
+        if (movieCollection.getElementByKey(key) == null)
             throw new CollectionKeyException("key does not exist");
         movieCollection.remove(key);
         System.out.println("*element removed successfully*");
@@ -112,7 +106,7 @@ public class Receiver {
     public void replaceIfLowe(Integer key, String movieName, Integer x, Integer y, long oscarsCount,
                               MovieGenre movieGenre, MpaaRating mpaaRating, String directorName, LocalDateTime birthday,
                               Integer weight, String passportID) throws CollectionKeyException, WrongArgumentException {
-        if (movieCollection.getMovieByKey(key) == null)
+        if (movieCollection.getElementByKey(key) == null)
             throw new CollectionKeyException("key does not exist");
         Movie movie = new Movie(movieName, new Coordinates(x, y), oscarsCount, movieGenre,
                 mpaaRating, new Person(directorName, birthday, weight, passportID));
@@ -135,19 +129,16 @@ public class Receiver {
     }
 
     public List<Movie> printAscending() {
-//      todo  return HashMap
         System.out.println("*elements of collection ascended*");
         return movieCollection.printAscending();
     }
 
     public List<Movie> printDescending() {
-//      todo  return HashMap
         System.out.println("*elements of collection descended*");
         return movieCollection.printDescending();
     }
 
     public List<Movie> printFieldDescendingOscarsCount() {
-//      todo  return HashMap
         System.out.println("*oscars count descended*");
         return movieCollection.printFieldDescendingOscarsCount();
     }

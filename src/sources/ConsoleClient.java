@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
@@ -96,7 +97,8 @@ public class ConsoleClient implements Client {
             case "show" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                String result = invoker.executeAndReturn(new Show(this, receiver));
+                HashMap<Integer, Movie> result = invoker.executeAndReturn(new Show(this, receiver));
+                PrettyPrinter.printMovieHashMap(result);
                 System.out.println(result);
             }
             case "insert" -> {
@@ -248,26 +250,19 @@ public class ConsoleClient implements Client {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintAscending(this, receiver));
-                for (Movie movie : movieList) {
-                    System.out.println(movie);
-                }
+                PrettyPrinter.printMovieList(movieList);
             }
             case "print_descending" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintDescending(this, receiver));
-                for (Movie movie : movieList) {
-                    System.out.println(movie);
-                }
+                PrettyPrinter.printMovieList(movieList);
             }
             case "print_field_descending_oscars_count" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintFieldDescendingOscarsCount(this, receiver));
-                System.out.println("Oscars count - Movie name");
-                for (Movie movie : movieList) {
-                    System.out.println(movie.getOscarsCount() + " - " + movie.getName());
-                }
+                PrettyPrinter.printMovieListOscars(movieList);
             }
 
             default -> throw new InvalidCommandException(commandName);
@@ -513,24 +508,39 @@ public class ConsoleClient implements Client {
 
     @Override
     public void help() {
-        System.out.println("""
-                *list of commands*
-                help : вывести справку по доступным командам
-                info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)
-                show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении
-                insert null {element} : добавить новый элемент с заданным ключом
-                update id {element} : обновить значение элемента коллекции, id которого равен заданному
-                remove_key null : удалить элемент из коллекции по его ключу
-                clear : очистить коллекцию
-                save : сохранить коллекцию в файл
-                execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.
-                exit : завершить программу (без сохранения в файл)
-                remove_greater {element} : удалить из коллекции все элементы, превышающие заданный
-                replace_if_lowe null {element} : заменить значение по ключу, если новое значение меньше старого
-                remove_lower_key null : удалить из коллекции все элементы, ключ которых меньше, чем заданный
-                print_ascending : вывести элементы коллекции в порядке возрастания
-                print_descending : вывести элементы коллекции в порядке убывания
-                print_field_descending_oscars_count : вывести значения поля oscarsCount всех элементов в порядке убывания""");
+        System.out.println("*list of commands*");
+        System.out.printf("%-35s", "- help");
+        System.out.println(" : вывести справку по доступным командам");
+        System.out.printf("%-35s", "- info");
+        System.out.println(" : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)");
+        System.out.printf("%-35s", "- show");
+        System.out.println(" : вывести в стандартный поток вывода все элементы коллекции в строковом представлении");
+        System.out.printf("%-35s", "- insert null {element}");
+        System.out.println(" : добавить новый элемент с заданным ключом");
+        System.out.printf("%-35s", "- update id {element}");
+        System.out.println(" : обновить значение элемента коллекции, id которого равен заданному");
+        System.out.printf("%-35s", "- remove_key null");
+        System.out.println(" : удалить элемент из коллекции по его ключу");
+        System.out.printf("%-35s", "- clear");
+        System.out.println(" : очистить коллекцию");
+        System.out.printf("%-35s", "- save");
+        System.out.println(" : сохранить коллекцию в файл");
+        System.out.printf("%-35s", "- execute_script file_name");
+        System.out.println(" : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.");
+        System.out.printf("%-35s", "- exit");
+        System.out.println(" : завершить программу (без сохранения в файл)");
+        System.out.printf("%-35s", "- remove_greater {element}");
+        System.out.println(" : удалить из коллекции все элементы, превышающие заданный");
+        System.out.printf("%-35s", "- replace_if_lowe null {element}");
+        System.out.println(" : заменить значение по ключу, если новое значение меньше старого");
+        System.out.printf("%-35s", "- remove_lower_key null");
+        System.out.println(" : удалить из коллекции все элементы, ключ которых меньше, чем заданный");
+        System.out.printf("%-35s", "- print_ascending");
+        System.out.println(" : вывести элементы коллекции в порядке возрастания");
+        System.out.printf("%-35s", "- print_descending");
+        System.out.println(" : вывести элементы коллекции в порядке убывания");
+        System.out.printf("%-35s", "- print_field_descending_oscars_count");
+        System.out.println(" : вывести значения поля oscarsCount всех элементов в порядке убывания");
     }
 
     @Override

@@ -123,7 +123,7 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
                 }
                 Person director = new Person(directorNameInput, birthday, weight, passportID);
 
-                if (movieCollection.getMovieByID(id) != null)
+                if (movieCollection.getElementByID(id) != null)
                     throw new WrongArgumentException("movie id must be unique");
 
                 Movie movie = new Movie(id, movieName, coordinates, oscarsCount, movieGenre, mpaaRating, director);

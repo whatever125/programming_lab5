@@ -17,11 +17,11 @@ public class MovieCollection {
         movieHashMap.put(key, movie);
     }
 
-    public Movie getMovieByKey(Integer key) {
+    public Movie getElementByKey(Integer key) {
         return movieHashMap.get(key);
     }
 
-    public Movie getMovieByID(Integer id) {
+    public Movie getElementByID(Integer id) {
         for (Movie movie : movieHashMap.values()) {
             if (Objects.equals(movie.getID(), id))
                 return movie;
@@ -57,7 +57,7 @@ public class MovieCollection {
         HashMap<Integer, Movie> newMovieHashMap = new HashMap<>(movieHashMap);
         int count = 0;
         for (Integer key : movieHashMap.keySet()) {
-            if (getMovieByKey(key).compareTo(movie) > 0) {
+            if (getElementByKey(key).compareTo(movie) > 0) {
                 newMovieHashMap.remove(key);
                 count += 1;
             }
@@ -67,7 +67,7 @@ public class MovieCollection {
     }
 
     public boolean replaceIfLowe(Integer id, Movie movie) {
-        if (getMovieByKey(id).compareTo(movie) > 0) {
+        if (getElementByKey(id).compareTo(movie) > 0) {
             put(id, movie);
             return true;
         }
