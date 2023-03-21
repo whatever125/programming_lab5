@@ -28,7 +28,7 @@ public class PrettyPrinter {
         printMovieParamNames();
         System.out.println("-".repeat(166));
 
-        for (Integer key: hashMap.keySet()) {
+        for (Integer key : hashMap.keySet()) {
             Movie movie = hashMap.get(key);
             System.out.printf(keyFormat, key);
             printMovieParams(movie);
@@ -39,7 +39,7 @@ public class PrettyPrinter {
         printMovieParamNames();
         System.out.println("-".repeat(158));
 
-        for (Movie movie: movieList) {
+        for (Movie movie : movieList) {
             printMovieParams(movie);
         }
     }
@@ -51,7 +51,7 @@ public class PrettyPrinter {
         System.out.println();
         System.out.println("-".repeat(33));
 
-        for (Movie movie: movieList) {
+        for (Movie movie : movieList) {
             System.out.printf(movieIDFormat, movie.getID());
             System.out.printf(movieNameFormat, movie.getName());
             System.out.printf(oscarsFormat, movie.getOscarsCount());

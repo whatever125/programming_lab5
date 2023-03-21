@@ -1,3 +1,3 @@
 info
-execute_script input.txt
+execute_script ../lab5/input.txt
 info

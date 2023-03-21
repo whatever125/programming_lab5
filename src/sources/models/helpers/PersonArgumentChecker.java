@@ -1,7 +1,6 @@
 package sources.models.helpers;
 
 import sources.exceptions.io.WrongArgumentException;
-import sources.models.Person;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +30,6 @@ public class PersonArgumentChecker extends ArgumentChecker {
         if (passportID != null) {
             checkArgument(7 <= passportID.length(), "argument passportID length cannot be < 7");
             checkArgument(passportID.length() <= 32, "argument passportID length cannot be > 32");
-            checkArgument(!Person.isUsedPassportID(passportID), "argument passportID must be unique");
         }
     }
 }

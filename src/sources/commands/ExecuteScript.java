@@ -2,6 +2,7 @@ package sources.commands;
 
 import sources.Client;
 import sources.Receiver;
+import sources.exceptions.io.CustomIOException;
 
 public class ExecuteScript extends AbstractCommand {
     private final String path;
@@ -12,7 +13,7 @@ public class ExecuteScript extends AbstractCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws CustomIOException {
         client.executeScript(path);
     }
 

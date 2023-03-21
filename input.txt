@@ -10,3 +10,4 @@ name
 70
 1234567891111
 show
+execute_script input1.txt

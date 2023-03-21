@@ -71,6 +71,8 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
 
                 attributeName = "coordinates";
                 Element coordinatesInput = (Element) movieElement.getElementsByTagName(attributeName).item(0);
+                if (coordinatesInput == null)
+                    throw new NullPointerException();
                 attributeName = "x";
                 String xInput = coordinatesInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 int x = Integer.parseInt(xInput);
@@ -107,20 +109,27 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
 
                 attributeName = "director";
                 Element directorInput = (Element) movieElement.getElementsByTagName(attributeName).item(0);
+                if (directorInput == null)
+                    throw new NullPointerException();
+
                 attributeName = "directorName";
                 String directorNameInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
+
                 attributeName = "birthday";
                 String birthdayInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 LocalDateTime birthday = LocalDateTime.parse(birthdayInput);
+
                 attributeName = "weight";
                 String weightInput = directorInput.getElementsByTagName(attributeName).item(0).getTextContent().trim();
                 Integer weight = Integer.parseInt(weightInput);
+
                 attributeName = "passportID";
                 Node passportIDInput = directorInput.getElementsByTagName(attributeName).item(0);
                 String passportID = null;
                 if (passportIDInput != null && !passportIDInput.getTextContent().trim().equals("")) {
                     passportID = passportIDInput.getTextContent().trim();
                 }
+
                 Person director = new Person(directorNameInput, birthday, weight, passportID);
 
                 if (movieCollection.getElementByID(id) != null)
@@ -134,28 +143,28 @@ public class MovieCollectionXMLFileReader implements MovieCollectionFileReader {
             Movie.updateNextId(movieCollection);
             return movieCollection;
         } catch (NullPointerException e) {
-            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " is null");
+            throw new InvalidFileDataException(path, "movie №" + (i + 1) + ": " + attributeName + " is null");
         } catch (DateTimeParseException e) {
             if (i < 0) {
-                throw new InvalidFileDataException(attributeName + " is invalid or null");
+                throw new InvalidFileDataException(path, attributeName + " is invalid or null");
             } else {
-                throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " is invalid or null");
+                throw new InvalidFileDataException(path, "movie №" + (i + 1) + ": " + attributeName + " is invalid or null");
             }
         } catch (UnsupportedEncodingException e) {
-            throw new InvalidFileDataException("unsupported encoding: " + e.getMessage());
+            throw new InvalidFileDataException(path, "unsupported encoding: " + e.getMessage());
         } catch (SAXParseException e) {
-            throw new InvalidFileDataException("XML parse error: " + e.getMessage());
+            throw new InvalidFileDataException(path, "XML parse error: " + e.getMessage());
         } catch (NumberFormatException e) {
-            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + attributeName + " must be an integer");
+            throw new InvalidFileDataException(path, "movie №" + (i + 1) + ": " + attributeName + " must be an integer");
         } catch (WrongArgumentException e) {
             StringBuilder errorMessage = new StringBuilder(e.getMessage());
             errorMessage.delete(0, 2);
             errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
-            throw new InvalidFileDataException("movie №" + (i + 1) + ": " + errorMessage);
+            throw new InvalidFileDataException(path, "movie №" + (i + 1) + ": " + errorMessage);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             System.out.println(e.getClass());
             System.out.println(Arrays.toString(e.getStackTrace()));
-            throw new InvalidFileDataException(e.getMessage());
+            throw new InvalidFileDataException(path, e.getMessage());
         }
     }
 

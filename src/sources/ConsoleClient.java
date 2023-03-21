@@ -8,10 +8,7 @@ import sources.exceptions.client.FileRecursionError;
 import sources.exceptions.client.InvalidCommandException;
 import sources.exceptions.client.InvalidScriptException;
 import sources.exceptions.client.WrongNumberOfArgumentsException;
-import sources.exceptions.io.EndOfInputException;
-import sources.exceptions.io.FilePermissionException;
-import sources.exceptions.io.InvalidFileDataException;
-import sources.exceptions.io.WrongArgumentException;
+import sources.exceptions.io.*;
 import sources.exceptions.receiver.CollectionKeyException;
 import sources.models.Movie;
 import sources.models.MovieGenre;
@@ -20,6 +17,10 @@ import sources.models.helpers.MovieArgumentChecker;
 import sources.models.helpers.PersonArgumentChecker;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,7 +49,7 @@ public class ConsoleClient implements Client {
                 try {
                     readAndExecuteCommand(consoleReader);
                 } catch (InvalidCommandException | CollectionKeyException | WrongNumberOfArgumentsException |
-                         WrongArgumentException | InvalidScriptException e) {
+                         WrongArgumentException | InvalidScriptException | CustomIOException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -66,7 +67,7 @@ public class ConsoleClient implements Client {
     }
 
     private void readAndExecuteCommand(BasicReader basicReader) throws InvalidCommandException, CollectionKeyException,
-            WrongNumberOfArgumentsException, WrongArgumentException, InvalidScriptException {
+            WrongNumberOfArgumentsException, WrongArgumentException, InvalidScriptException, CustomIOException {
         String input = basicReader.readLine().trim();
         if (input.startsWith("//") || input.equals("")) {
             return;
@@ -83,10 +84,10 @@ public class ConsoleClient implements Client {
                     throw new WrongNumberOfArgumentsException();
                 invoker.execute(new Help(this, receiver));
             }
-            case "print" -> {
+            case "history" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                invoker.printCommandHistory();
+                invoker.execute(new History(this, receiver));
             }
             case "info" -> {
                 if (args.length != 0)
@@ -493,7 +494,7 @@ public class ConsoleClient implements Client {
                 if (Objects.equals(passportID, "")) {
                     passportID = null;
                 }
-                PersonArgumentChecker.checkPassportID(passportID); //todo check unique
+                PersonArgumentChecker.checkPassportID(passportID);
                 passportIDSuccess = true;
             } catch (WrongArgumentException e) {
                 if (inScriptMode()) {
@@ -549,10 +550,18 @@ public class ConsoleClient implements Client {
     }
 
     @Override
-    public void executeScript(String path) {
+    public void history() {
+        Stack<AbstractCommand> commandHistory = invoker.getCommandHistory();
+        System.out.println("*command history*");
+        for (AbstractCommand command : commandHistory) {
+            System.out.println(command);
+        }
+    }
+
+    @Override
+    public void executeScript(String path) throws CustomIOException {
         try {
-            if (pathStack.contains(path))
-                // todo check with paths
+            if (pathStackContains(path))
                 throw new FileRecursionError(path);
 
             BasicReader basicReader = new CustomFileReader(path);
@@ -570,6 +579,20 @@ public class ConsoleClient implements Client {
             pathStack.pop();
         } catch (FileRecursionError | FileNotFoundException | FilePermissionException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private boolean pathStackContains(String pathToCheck) throws CustomIOException {
+        try {
+            for (String pathFromStack : pathStack) {
+                Path path1 = Paths.get(pathFromStack);
+                Path path2 = Paths.get(pathToCheck);
+                if (Files.isSameFile(path1, path2))
+                    return true;
+            }
+            return false;
+        } catch (IOException e) {
+            throw new CustomIOException(e.getMessage());
         }
     }
 

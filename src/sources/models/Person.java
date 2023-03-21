@@ -3,7 +3,6 @@ package sources.models;
 import sources.exceptions.io.WrongArgumentException;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 import static sources.models.helpers.PersonArgumentChecker.*;
 
@@ -12,7 +11,6 @@ public class Person {
     private java.time.LocalDateTime birthday; //Поле не может быть null
     private Integer weight; //Поле может быть null, Значение поля должно быть больше 0
     private String passportID; //Длина строки не должна быть больше 32, Длина строки должна быть не меньше 7, Значение этого поля должно быть уникальным, Поле может быть null
-    private static final HashSet<String> passportIDSet = new HashSet<>();
 
     public Person(String name, LocalDateTime birthday, Integer weight, String passportID) throws WrongArgumentException {
         checkArguments(name, birthday, weight, passportID);
@@ -20,9 +18,6 @@ public class Person {
         this.birthday = birthday;
         this.weight = weight;
         this.passportID = passportID;
-        if (passportID != null) {
-            passportIDSet.add(passportID);
-        }
     }
 
     public String getName() {
@@ -59,10 +54,6 @@ public class Person {
     public void setPassportID(String passportID) throws WrongArgumentException {
         checkPassportID(passportID);
         this.passportID = passportID;
-    }
-
-    public static boolean isUsedPassportID(String passportID) {
-        return passportIDSet.contains(passportID);
     }
 
     @Override

@@ -1,9 +1,13 @@
 package sources;
 
+import sources.exceptions.io.CustomIOException;
+
 public interface Client {
     void help();
 
     void exit();
 
-    void executeScript(String path);
+    void history();
+
+    void executeScript(String path) throws CustomIOException;
 }
