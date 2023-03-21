@@ -126,7 +126,10 @@ public class Movie implements Comparable<Movie> {
 
     @Override
     public int compareTo(Movie movie) {
-        return this.name.compareTo(movie.name);
+        int nameCompare = this.name.toLowerCase().compareTo(movie.name.toLowerCase());
+        if (nameCompare == 0)
+            return (int) (this.getOscarsCount() - movie.getOscarsCount());
+        return this.name.toLowerCase().compareTo(movie.name.toLowerCase());
     }
 
     @Override
