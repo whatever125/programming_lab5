@@ -33,6 +33,11 @@ public class MovieArgumentChecker extends ArgumentChecker {
         checkArgument(id > 0, "argument id cannot be <= 0");
     }
 
+    public static void checkKey(Integer key) throws WrongArgumentException {
+        checkNull(key, "key");
+        checkArgument(key > 0, "argument key cannot be <= 0");
+    }
+
     public static void checkName(String name) throws WrongArgumentException {
         checkNull(name, "name");
         checkArgument(!Objects.equals(name, ""), "argument name cannot be empty");
