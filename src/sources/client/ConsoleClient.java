@@ -14,7 +14,6 @@ import sources.models.Movie;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 import sources.models.helpers.MovieArgumentChecker;
-import sources.models.helpers.PersonArgumentChecker;
 import sources.receiver.Receiver;
 
 import java.io.FileNotFoundException;
@@ -22,14 +21,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Stack;
+
+import static sources.client.MovieDataConsoleReader.*;
 
 public class ConsoleClient implements Client {
     Invoker invoker;
@@ -106,18 +103,19 @@ public class ConsoleClient implements Client {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
+                    boolean inScriptMode = inScriptMode();
                     Integer key = Integer.parseInt(args[0]);
                     MovieArgumentChecker.checkKey(key);
-                    String movieName = readMovieName(basicReader);
-                    Integer x = readX(basicReader);
-                    Integer y = readY(basicReader);
-                    long oscarsCount = readOscrasCount(basicReader);
-                    MovieGenre movieGenre = readMovieGenre(basicReader);
-                    MpaaRating mpaaRating = readMpaaRating(basicReader);
-                    String directorName = readDirectorName(basicReader);
-                    LocalDateTime birthday = readBirthday(basicReader);
-                    Integer weight = readWeight(basicReader);
-                    String passportID = readPassportID(basicReader);
+                    String movieName = readMovieName(basicReader, inScriptMode);
+                    Integer x = readX(basicReader, inScriptMode);
+                    Integer y = readY(basicReader, inScriptMode);
+                    long oscarsCount = readOscrasCount(basicReader, inScriptMode);
+                    MovieGenre movieGenre = readMovieGenre(basicReader, inScriptMode);
+                    MpaaRating mpaaRating = readMpaaRating(basicReader, inScriptMode);
+                    String directorName = readDirectorName(basicReader, inScriptMode);
+                    LocalDateTime birthday = readBirthday(basicReader, inScriptMode);
+                    Integer weight = readWeight(basicReader, inScriptMode);
+                    String passportID = readPassportID(basicReader, inScriptMode);
                     invoker.execute(new Insert(this, receiver, key, movieName, x, y, oscarsCount,
                             movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
@@ -133,17 +131,18 @@ public class ConsoleClient implements Client {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
+                    boolean inScriptMode = inScriptMode();
                     Integer id = Integer.parseInt(args[0]);
-                    String movieName = readMovieName(basicReader);
-                    Integer x = readX(basicReader);
-                    Integer y = readY(basicReader);
-                    long oscarsCount = readOscrasCount(basicReader);
-                    MovieGenre movieGenre = readMovieGenre(basicReader);
-                    MpaaRating mpaaRating = readMpaaRating(basicReader);
-                    String directorName = readDirectorName(basicReader);
-                    LocalDateTime birthday = readBirthday(basicReader);
-                    Integer weight = readWeight(basicReader);
-                    String passportID = readPassportID(basicReader);
+                    String movieName = readMovieName(basicReader, inScriptMode);
+                    Integer x = readX(basicReader, inScriptMode);
+                    Integer y = readY(basicReader, inScriptMode);
+                    long oscarsCount = readOscrasCount(basicReader, inScriptMode);
+                    MovieGenre movieGenre = readMovieGenre(basicReader, inScriptMode);
+                    MpaaRating mpaaRating = readMpaaRating(basicReader, inScriptMode);
+                    String directorName = readDirectorName(basicReader, inScriptMode);
+                    LocalDateTime birthday = readBirthday(basicReader, inScriptMode);
+                    Integer weight = readWeight(basicReader, inScriptMode);
+                    String passportID = readPassportID(basicReader, inScriptMode);
                     invoker.execute(new Update(this, receiver, id, movieName, x, y, oscarsCount,
                             movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
@@ -195,16 +194,17 @@ public class ConsoleClient implements Client {
             case "remove_greater" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
-                String movieName = readMovieName(basicReader);
-                Integer x = readX(basicReader);
-                Integer y = readY(basicReader);
-                long oscarsCount = readOscrasCount(basicReader);
-                MovieGenre movieGenre = readMovieGenre(basicReader);
-                MpaaRating mpaaRating = readMpaaRating(basicReader);
-                String directorName = readDirectorName(basicReader);
-                LocalDateTime birthday = readBirthday(basicReader);
-                Integer weight = readWeight(basicReader);
-                String passportID = readPassportID(basicReader);
+                boolean inScriptMode = inScriptMode();
+                String movieName = readMovieName(basicReader, inScriptMode);
+                Integer x = readX(basicReader, inScriptMode);
+                Integer y = readY(basicReader, inScriptMode);
+                long oscarsCount = readOscrasCount(basicReader, inScriptMode);
+                MovieGenre movieGenre = readMovieGenre(basicReader, inScriptMode);
+                MpaaRating mpaaRating = readMpaaRating(basicReader, inScriptMode);
+                String directorName = readDirectorName(basicReader, inScriptMode);
+                LocalDateTime birthday = readBirthday(basicReader, inScriptMode);
+                Integer weight = readWeight(basicReader, inScriptMode);
+                String passportID = readPassportID(basicReader, inScriptMode);
                 invoker.execute(new RemoveGreater(this, receiver, movieName, x, y,
                         oscarsCount, movieGenre, mpaaRating, directorName, birthday, weight, passportID));
             }
@@ -212,18 +212,19 @@ public class ConsoleClient implements Client {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
+                    boolean inScriptMode = inScriptMode();
                     Integer key = Integer.parseInt(args[0]);
                     MovieArgumentChecker.checkKey(key);
-                    String movieName = readMovieName(basicReader);
-                    Integer x = readX(basicReader);
-                    Integer y = readY(basicReader);
-                    long oscarsCount = readOscrasCount(basicReader);
-                    MovieGenre movieGenre = readMovieGenre(basicReader);
-                    MpaaRating mpaaRating = readMpaaRating(basicReader);
-                    String directorName = readDirectorName(basicReader);
-                    LocalDateTime birthday = readBirthday(basicReader);
-                    Integer weight = readWeight(basicReader);
-                    String passportID = readPassportID(basicReader);
+                    String movieName = readMovieName(basicReader, inScriptMode);
+                    Integer x = readX(basicReader, inScriptMode);
+                    Integer y = readY(basicReader, inScriptMode);
+                    long oscarsCount = readOscrasCount(basicReader, inScriptMode);
+                    MovieGenre movieGenre = readMovieGenre(basicReader, inScriptMode);
+                    MpaaRating mpaaRating = readMpaaRating(basicReader, inScriptMode);
+                    String directorName = readDirectorName(basicReader, inScriptMode);
+                    LocalDateTime birthday = readBirthday(basicReader, inScriptMode);
+                    Integer weight = readWeight(basicReader, inScriptMode);
+                    String passportID = readPassportID(basicReader, inScriptMode);
                     invoker.execute(new ReplaceIfLowe(this, receiver, key, movieName, x, y,
                             oscarsCount, movieGenre, mpaaRating, directorName, birthday, weight, passportID));
                 } catch (NumberFormatException e) {
@@ -272,243 +273,6 @@ public class ConsoleClient implements Client {
 
             default -> throw new InvalidCommandException(commandName);
         }
-    }
-
-    private String readMovieName(BasicReader basicReader) throws InvalidScriptException {
-        String movieName = null;
-        while (movieName == null) {
-            try {
-                String input = basicReader.readLine("Enter movie name");
-                movieName = input.trim();
-                MovieArgumentChecker.checkName(movieName);
-            } catch (WrongArgumentException e) {
-                movieName = null;
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(e.getMessage());
-                } else {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-        return movieName;
-    }
-
-    private Integer readX(BasicReader basicReader) throws InvalidScriptException {
-        Integer x = null;
-        boolean xSuccess = false;
-        while (!xSuccess) {
-            try {
-                String input = basicReader.readLine("Enter X coordinate");
-                String xInput = input.trim();
-                x = Integer.parseInt(xInput);
-                xSuccess = true;
-            } catch (NumberFormatException e) {
-                String errorMessage = "! not an integer !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return x;
-    }
-
-    private Integer readY(BasicReader basicReader) throws InvalidScriptException {
-        Integer y = null;
-        boolean ySuccess = false;
-        while (!ySuccess) {
-            try {
-                String input = basicReader.readLine("Enter Y coordinate");
-                String xInput = input.trim();
-                y = Integer.parseInt(xInput);
-                ySuccess = true;
-            } catch (NumberFormatException e) {
-                String errorMessage = "! not an integer !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return y;
-    }
-
-    private long readOscrasCount(BasicReader basicReader) throws InvalidScriptException {
-        long oscarsCount = 0;
-        boolean oscarsCountSuccess = false;
-        while (!oscarsCountSuccess) {
-            try {
-                String input = basicReader.readLine("Enter oscars count");
-                String oscarsCountInput = input.trim();
-                oscarsCount = Long.parseLong(oscarsCountInput);
-                MovieArgumentChecker.checkOscarsCount(oscarsCount);
-                oscarsCountSuccess = true;
-            } catch (NumberFormatException e) {
-                String errorMessage = "! not an integer !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            } catch (WrongArgumentException e) {
-                String errorMessage = e.getMessage();
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return oscarsCount;
-    }
-
-    private MovieGenre readMovieGenre(BasicReader basicReader) throws InvalidScriptException {
-        MovieGenre movieGenre = null;
-
-        StringBuilder message = new StringBuilder("Enter movie genre (");
-        for (MovieGenre genre : MovieGenre.values()) {
-            message.append(genre.toString());
-            message.append("; ");
-        }
-        message.delete(message.length() - 2, message.length());
-        message.append(")");
-
-        while (movieGenre == null) {
-            String input = basicReader.readLine(String.valueOf(message));
-            String movieGenreInput = input.trim();
-            try {
-                movieGenre = MovieGenre.valueOf(movieGenreInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                String errorMessage = "! wrong movie genre !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return movieGenre;
-    }
-
-    private MpaaRating readMpaaRating(BasicReader basicReader) throws InvalidScriptException {
-        MpaaRating mpaaRating = null;
-
-        StringBuilder message = new StringBuilder("Enter MPAA rating (");
-        for (MpaaRating rating : MpaaRating.values()) {
-            message.append(rating.toString());
-            message.append("; ");
-        }
-        message.delete(message.length() - 2, message.length());
-        message.append(")");
-
-        while (mpaaRating == null) {
-            String input = basicReader.readLine(String.valueOf(message));
-            String mpaaRatingInput = input.trim();
-            try {
-                mpaaRating = MpaaRating.valueOf(mpaaRatingInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                String errorMessage = "! wrong MPAA rating !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return mpaaRating;
-    }
-
-    private String readDirectorName(BasicReader basicReader) throws InvalidScriptException {
-        String directorName = null;
-        while (directorName == null) {
-            try {
-                String input = basicReader.readLine("Enter director name");
-                directorName = input.trim();
-                PersonArgumentChecker.checkName(directorName);
-            } catch (WrongArgumentException e) {
-                directorName = null;
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(e.getMessage());
-                } else {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-        return directorName;
-    }
-
-    private LocalDateTime readBirthday(BasicReader basicReader) throws InvalidScriptException {
-        LocalDateTime birthday = null;
-        while (birthday == null) {
-            try {
-                String input = basicReader.readLine("Enter director birthday in DD.MM.YYYY format");
-                String birthdayInput = input.trim();
-                birthday = LocalDate.parse(birthdayInput, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay();
-            } catch (DateTimeParseException e) {
-                String errorMessage = "! wrong date format !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            }
-        }
-        return birthday;
-    }
-
-    private Integer readWeight(BasicReader basicReader) throws InvalidScriptException {
-        Integer weight = null;
-        boolean weightSuccess = false;
-        while (!weightSuccess) {
-            try {
-                String input = basicReader.readLine("Enter director weight");
-                String weightInput = input.trim();
-                if (!weightInput.equals("")) {
-                    weight = Integer.parseInt(weightInput);
-                }
-                PersonArgumentChecker.checkWeight(weight);
-                weightSuccess = true;
-            } catch (NumberFormatException e) {
-                String errorMessage = "! not an integer !";
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(errorMessage);
-                } else {
-                    System.out.println(errorMessage);
-                }
-            } catch (WrongArgumentException e) {
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(e.getMessage());
-                } else {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-        return weight;
-    }
-
-    private String readPassportID(BasicReader basicReader) throws InvalidScriptException {
-        boolean passportIDSuccess = false;
-        String passportID = null;
-        while (!passportIDSuccess) {
-            try {
-                String input = basicReader.readLine("Enter director passport ID");
-                passportID = input.trim();
-                if (Objects.equals(passportID, "")) {
-                    passportID = null;
-                }
-                PersonArgumentChecker.checkPassportID(passportID);
-                passportIDSuccess = true;
-            } catch (WrongArgumentException e) {
-                if (inScriptMode()) {
-                    throw new InvalidScriptException(e.getMessage());
-                } else {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-        return passportID;
     }
 
     @Override
