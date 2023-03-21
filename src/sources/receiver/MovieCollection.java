@@ -1,4 +1,4 @@
-package sources;
+package sources.receiver;
 
 import sources.models.Movie;
 
@@ -102,8 +102,11 @@ public class MovieCollection {
 
     public List<Movie> printFieldDescendingOscarsCount() {
         List<Movie> movieList = new ArrayList<>(movieHashMap.values());
-        Collections.sort(movieList);
-        Collections.reverse(movieList);
+        movieList.sort(new Comparator<>() {
+            public int compare(Movie o1, Movie o2) {
+                return (int) (o2.getOscarsCount() - o1.getOscarsCount());
+            }
+        });
         return movieList;
     }
 }

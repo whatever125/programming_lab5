@@ -1,4 +1,4 @@
-package sources;
+package sources.receiver;
 
 import sources.IOHandlers.receiver.MovieCollectionFileReader;
 import sources.IOHandlers.receiver.MovieCollectionFileWriter;

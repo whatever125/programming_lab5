@@ -1,8 +1,8 @@
 package sources.commands;
 
-import sources.Client;
-import sources.Receiver;
+import sources.client.Client;
 import sources.models.Movie;
+import sources.receiver.Receiver;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package sources;
+package sources.client;
 
 import sources.commands.AbstractCommand;
 import sources.commands.AbstractCommandWithResult;

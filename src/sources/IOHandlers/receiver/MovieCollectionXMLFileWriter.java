@@ -1,9 +1,9 @@
 package sources.IOHandlers.receiver;
 
-import sources.MovieCollection;
 import sources.exceptions.io.CustomIOException;
 import sources.exceptions.io.FilePermissionException;
 import sources.models.Movie;
+import sources.receiver.MovieCollection;
 
 import java.io.*;
 import java.util.HashMap;

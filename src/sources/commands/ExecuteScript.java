@@ -1,8 +1,8 @@
 package sources.commands;
 
-import sources.Client;
-import sources.Receiver;
+import sources.client.Client;
 import sources.exceptions.io.CustomIOException;
+import sources.receiver.Receiver;
 
 public class ExecuteScript extends AbstractCommand {
     private final String path;

@@ -1,7 +1,7 @@
 package sources.models;
 
-import sources.MovieCollection;
 import sources.exceptions.io.WrongArgumentException;
+import sources.receiver.MovieCollection;
 
 import java.time.ZonedDateTime;
 import java.util.Objects;

@@ -1,8 +1,8 @@
 package sources.commands;
 
-import sources.Client;
-import sources.Receiver;
+import sources.client.Client;
 import sources.exceptions.receiver.CollectionKeyException;
+import sources.receiver.Receiver;
 
 public class RemoveKey extends AbstractCommand {
     private final Integer key;

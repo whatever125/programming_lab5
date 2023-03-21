@@ -1,4 +1,4 @@
-package sources;
+package sources.client;
 
 import sources.IOHandlers.client.BasicReader;
 import sources.IOHandlers.client.CustomConsoleReader;
@@ -15,6 +15,7 @@ import sources.models.MovieGenre;
 import sources.models.MpaaRating;
 import sources.models.helpers.MovieArgumentChecker;
 import sources.models.helpers.PersonArgumentChecker;
+import sources.receiver.Receiver;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -100,13 +101,13 @@ public class ConsoleClient implements Client {
                     throw new WrongNumberOfArgumentsException();
                 HashMap<Integer, Movie> result = invoker.executeAndReturn(new Show(this, receiver));
                 PrettyPrinter.printMovieHashMap(result);
-                System.out.println(result);
             }
             case "insert" -> {
                 if (args.length != 1)
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
+                    MovieArgumentChecker.checkKey(key);
                     String movieName = readMovieName(basicReader);
                     Integer x = readX(basicReader);
                     Integer y = readY(basicReader);
@@ -159,6 +160,7 @@ public class ConsoleClient implements Client {
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
+                    MovieArgumentChecker.checkKey(key);
                     invoker.execute(new RemoveKey(this, receiver, key));
                 } catch (NumberFormatException e) {
                     String errorMessage = "! not an integer !";
@@ -211,6 +213,7 @@ public class ConsoleClient implements Client {
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
+                    MovieArgumentChecker.checkKey(key);
                     String movieName = readMovieName(basicReader);
                     Integer x = readX(basicReader);
                     Integer y = readY(basicReader);
@@ -237,6 +240,7 @@ public class ConsoleClient implements Client {
                     throw new WrongNumberOfArgumentsException();
                 try {
                     Integer key = Integer.parseInt(args[0]);
+                    MovieArgumentChecker.checkKey(key);
                     invoker.execute(new RemoveLowerKey(this, receiver, key));
                 } catch (NumberFormatException e) {
                     String errorMessage = "! not an integer !";
@@ -510,37 +514,37 @@ public class ConsoleClient implements Client {
     @Override
     public void help() {
         System.out.println("*list of commands*");
-        System.out.printf("%-35s", "- help");
+        System.out.printf("%-37s", "- help");
         System.out.println(" : вывести справку по доступным командам");
-        System.out.printf("%-35s", "- info");
+        System.out.printf("%-37s", "- info");
         System.out.println(" : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)");
-        System.out.printf("%-35s", "- show");
+        System.out.printf("%-37s", "- show");
         System.out.println(" : вывести в стандартный поток вывода все элементы коллекции в строковом представлении");
-        System.out.printf("%-35s", "- insert null {element}");
+        System.out.printf("%-37s", "- insert null {element}");
         System.out.println(" : добавить новый элемент с заданным ключом");
-        System.out.printf("%-35s", "- update id {element}");
+        System.out.printf("%-37s", "- update id {element}");
         System.out.println(" : обновить значение элемента коллекции, id которого равен заданному");
-        System.out.printf("%-35s", "- remove_key null");
+        System.out.printf("%-37s", "- remove_key null");
         System.out.println(" : удалить элемент из коллекции по его ключу");
-        System.out.printf("%-35s", "- clear");
+        System.out.printf("%-37s", "- clear");
         System.out.println(" : очистить коллекцию");
-        System.out.printf("%-35s", "- save");
+        System.out.printf("%-37s", "- save");
         System.out.println(" : сохранить коллекцию в файл");
-        System.out.printf("%-35s", "- execute_script file_name");
+        System.out.printf("%-37s", "- execute_script file_name");
         System.out.println(" : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.");
-        System.out.printf("%-35s", "- exit");
+        System.out.printf("%-37s", "- exit");
         System.out.println(" : завершить программу (без сохранения в файл)");
-        System.out.printf("%-35s", "- remove_greater {element}");
+        System.out.printf("%-37s", "- remove_greater {element}");
         System.out.println(" : удалить из коллекции все элементы, превышающие заданный");
-        System.out.printf("%-35s", "- replace_if_lowe null {element}");
+        System.out.printf("%-37s", "- replace_if_lowe null {element}");
         System.out.println(" : заменить значение по ключу, если новое значение меньше старого");
-        System.out.printf("%-35s", "- remove_lower_key null");
+        System.out.printf("%-37s", "- remove_lower_key null");
         System.out.println(" : удалить из коллекции все элементы, ключ которых меньше, чем заданный");
-        System.out.printf("%-35s", "- print_ascending");
+        System.out.printf("%-37s", "- print_ascending");
         System.out.println(" : вывести элементы коллекции в порядке возрастания");
-        System.out.printf("%-35s", "- print_descending");
+        System.out.printf("%-37s", "- print_descending");
         System.out.println(" : вывести элементы коллекции в порядке убывания");
-        System.out.printf("%-35s", "- print_field_descending_oscars_count");
+        System.out.printf("%-37s", "- print_field_descending_oscars_count");
         System.out.println(" : вывести значения поля oscarsCount всех элементов в порядке убывания");
     }
 

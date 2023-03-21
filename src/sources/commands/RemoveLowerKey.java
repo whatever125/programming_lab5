@@ -1,7 +1,7 @@
 package sources.commands;
 
-import sources.Client;
-import sources.Receiver;
+import sources.client.Client;
+import sources.receiver.Receiver;
 
 public class RemoveLowerKey extends AbstractCommand {
     private final Integer key;

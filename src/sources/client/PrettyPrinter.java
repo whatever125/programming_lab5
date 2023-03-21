@@ -1,4 +1,4 @@
-package sources;
+package sources.client;
 
 import sources.models.Movie;
 
@@ -26,7 +26,7 @@ public class PrettyPrinter {
     static void printMovieHashMap(HashMap<Integer, Movie> hashMap) {
         System.out.printf(keyFormat, "Key");
         printMovieParamNames();
-        System.out.println("-".repeat(166));
+        System.out.println("-".repeat(165));
 
         for (Integer key : hashMap.keySet()) {
             Movie movie = hashMap.get(key);

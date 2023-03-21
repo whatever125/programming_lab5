@@ -1,10 +1,10 @@
 package sources.commands;
 
-import sources.Client;
-import sources.Receiver;
+import sources.client.Client;
 import sources.exceptions.io.WrongArgumentException;
 import sources.models.MovieGenre;
 import sources.models.MpaaRating;
+import sources.receiver.Receiver;
 
 import java.time.LocalDateTime;
 
