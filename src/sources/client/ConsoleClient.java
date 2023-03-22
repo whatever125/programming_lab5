@@ -28,12 +28,21 @@ import java.util.Stack;
 
 import static sources.client.MovieDataConsoleReader.*;
 
+/**
+ The ConsoleClient class implements the Client interface and is responsible for
+ interacting with the user through the console. It initializes the Invoker and Receiver,
+ reads user input, executes commands and handles exceptions.
+ */
 public class ConsoleClient implements Client {
     Invoker invoker;
     Receiver receiver;
     private final Stack<String> pathStack = new Stack<>();
     private boolean canExit = false;
 
+    /**
+     * Main method of the ConsoleClient class. Initializes the Invoker, Receiver and Reader and
+     * starts an interactive loop to read user input and execute commands.
+     */
     public void main() {
         try {
             // Initialize Invoker, Receiver and Reader
@@ -64,6 +73,17 @@ public class ConsoleClient implements Client {
         }
     }
 
+    /**
+     * Reads a command from the user and executes it using the Invoker and Receiver.
+     *
+     * @param basicReader the reader used to read input from the user.
+     * @throws InvalidCommandException if the user enters an invalid command.
+     * @throws CollectionKeyException if the user enters a command with an invalid key.
+     * @throws WrongNumberOfArgumentsException if the user enters a command with the wrong number of arguments.
+     * @throws WrongArgumentException if the user enters a command with invalid arguments.
+     * @throws InvalidScriptException if the user enters an invalid script file.
+     * @throws CustomIOException if there is an IO error when reading the user input.
+     */
     private void readAndExecuteCommand(BasicReader basicReader) throws InvalidCommandException, CollectionKeyException,
             WrongNumberOfArgumentsException, WrongArgumentException, InvalidScriptException, CustomIOException {
         String input = basicReader.readLine().trim();
@@ -278,6 +298,9 @@ public class ConsoleClient implements Client {
         }
     }
 
+    /**
+     * Displays a list of available commands and their descriptions to the user.
+     */
     @Override
     public void help() {
         System.out.println("*list of commands*");
@@ -315,11 +338,17 @@ public class ConsoleClient implements Client {
         System.out.println(" : вывести значения поля oscarsCount всех элементов в порядке убывания");
     }
 
+    /**
+     * Terminates the program.
+     */
     @Override
     public void exit() {
         canExit = true;
     }
 
+    /**
+     * Displays a list of previously executed commands to the user.
+     */
     @Override
     public void history() {
         Stack<AbstractCommand> commandHistory = invoker.getCommandHistory();
@@ -329,6 +358,12 @@ public class ConsoleClient implements Client {
         }
     }
 
+    /**
+     * Executes a script file containing a list of commands.
+     *
+     * @param path the path of the script file to execute
+     * @throws CustomIOException if there is an error reading the script file
+     */
     @Override
     public void executeScript(String path) throws CustomIOException {
         try {
@@ -353,6 +388,13 @@ public class ConsoleClient implements Client {
         }
     }
 
+    /**
+     * Checks if the given path is already in the path stack.
+     *
+     * @param pathToCheck the path to check
+     * @return true if the path is already in the path stack, false otherwise
+     * @throws CustomIOException if there is an error checking the path stack
+     */
     private boolean pathStackContains(String pathToCheck) throws CustomIOException {
         try {
             for (String pathFromStack : pathStack) {
@@ -367,6 +409,11 @@ public class ConsoleClient implements Client {
         }
     }
 
+    /**
+     * The printPathStack() method returns a string representation of the path stack.
+     *
+     * @return a string representation of the path stack
+     */
     private String printPathStack() {
         StringBuilder returnString = new StringBuilder();
         for (String path : pathStack) {
@@ -376,6 +423,11 @@ public class ConsoleClient implements Client {
         return returnString.toString();
     }
 
+    /**
+     * The inScriptMode() method checks if the program is currently executing a script.
+     *
+     * @return true if the program is in script mode, false otherwise
+     */
     private boolean inScriptMode() {
         return !pathStack.empty();
     }

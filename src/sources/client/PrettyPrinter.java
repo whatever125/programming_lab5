@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The PrettyPrinter class contains methods for printing movie data in a user-friendly way.
+ */
 public class PrettyPrinter {
     static final String dateTimeFormat = "dd.MM.yy HH:mm";
     static final String birthdayTimeFormat = "dd.MM.yyyy";
@@ -23,6 +26,11 @@ public class PrettyPrinter {
     static final String weightFormat = "%10s |";
     static final String passportIDFormat = "%20s |";
 
+    /**
+     * Prints the movie data stored in a HashMap in a user-friendly way.
+     *
+     * @param hashMap the HashMap containing the movie data
+     */
     static void printMovieHashMap(HashMap<Integer, Movie> hashMap) {
         System.out.printf(keyFormat, "Key");
         printMovieParamNames();
@@ -35,6 +43,11 @@ public class PrettyPrinter {
         }
     }
 
+    /**
+     * Prints the movie data stored in a List in a user-friendly way.
+     *
+     * @param movieList the List containing the movie data
+     */
     public static void printMovieList(List<Movie> movieList) {
         printMovieParamNames();
         System.out.println("-".repeat(158));
@@ -44,6 +57,12 @@ public class PrettyPrinter {
         }
     }
 
+    /**
+     * Prints the movie data stored in a List in a user-friendly way,
+     * including the number of Oscars each movie has won.
+     *
+     * @param movieList the List containing the movie data
+     */
     public static void printMovieListOscars(List<Movie> movieList) {
         System.out.printf(movieIDFormat, "ID");
         System.out.printf(movieNameFormat, "movieName");
@@ -59,6 +78,7 @@ public class PrettyPrinter {
         }
     }
 
+    
     private static void printMovieParamNames() {
         System.out.printf(movieIDFormat, "ID");
         System.out.printf(movieNameFormat, "movieName");

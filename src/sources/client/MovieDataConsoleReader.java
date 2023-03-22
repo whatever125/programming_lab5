@@ -14,7 +14,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
+/**
+ The MovieDataConsoleReader class provides static methods for reading movie data from console input.
+ The class provides methods for reading movie name, coordinates, oscars count, genre, MPAA rating,
+ and director name from console input.
+ */
 public class MovieDataConsoleReader {
+    /**
+     * Reads the movie name from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The movie name entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static String readMovieName(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         String movieName = null;
         while (movieName == null) {
@@ -34,6 +47,14 @@ public class MovieDataConsoleReader {
         return movieName;
     }
 
+    /**
+     * Reads the X coordinate from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The X coordinate entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static Integer readX(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         Integer x = null;
         boolean xSuccess = false;
@@ -55,6 +76,14 @@ public class MovieDataConsoleReader {
         return x;
     }
 
+    /**
+     * Reads the Y coordinate from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The Y coordinate entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static Integer readY(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         Integer y = null;
         boolean ySuccess = false;
@@ -76,6 +105,14 @@ public class MovieDataConsoleReader {
         return y;
     }
 
+    /**
+     * Reads the oscarsCount from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The oscarsCount entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static long readOscrasCount(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         long oscarsCount = 0;
         boolean oscarsCountSuccess = false;
@@ -105,6 +142,14 @@ public class MovieDataConsoleReader {
         return oscarsCount;
     }
 
+    /**
+     * Reads the movie genre from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The movie genre entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static MovieGenre readMovieGenre(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         MovieGenre movieGenre = null;
 
@@ -133,6 +178,14 @@ public class MovieDataConsoleReader {
         return movieGenre;
     }
 
+    /**
+     * Reads the MPAA rating from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The MPAA rating entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static MpaaRating readMpaaRating(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         MpaaRating mpaaRating = null;
 
@@ -161,6 +214,14 @@ public class MovieDataConsoleReader {
         return mpaaRating;
     }
 
+    /**
+     * Reads the director name from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The director name entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static String readDirectorName(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         String directorName = null;
         while (directorName == null) {
@@ -180,6 +241,14 @@ public class MovieDataConsoleReader {
         return directorName;
     }
 
+    /**
+     * Reads the director birthday from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The director birthday entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static LocalDateTime readBirthday(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         LocalDateTime birthday = null;
         while (birthday == null) {
@@ -199,6 +268,14 @@ public class MovieDataConsoleReader {
         return birthday;
     }
 
+    /**
+     * Reads the director weight from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The director weight entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static Integer readWeight(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         Integer weight = null;
         boolean weightSuccess = false;
@@ -229,6 +306,14 @@ public class MovieDataConsoleReader {
         return weight;
     }
 
+    /**
+     * Reads the director passport ID from console input using a BasicReader instance.
+     *
+     * @param basicReader The BasicReader instance used for reading input from the console.
+     * @param inScriptMode Boolean flag indicating whether the method is running in script mode.
+     * @return The director passport ID entered by the user.
+     * @throws InvalidScriptException If the method is running in script mode and the input is invalid.
+     */
     public static String readPassportID(BasicReader basicReader, boolean inScriptMode) throws InvalidScriptException {
         boolean passportIDSuccess = false;
         String passportID = null;
