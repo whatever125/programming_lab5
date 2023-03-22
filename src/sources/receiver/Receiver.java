@@ -129,17 +129,14 @@ public class Receiver {
     }
 
     public List<Movie> printAscending() {
-        System.out.println("*elements of collection ascended*");
         return movieCollection.printAscending();
     }
 
     public List<Movie> printDescending() {
-        System.out.println("*elements of collection descended*");
         return movieCollection.printDescending();
     }
 
     public List<Movie> printFieldDescendingOscarsCount() {
-        System.out.println("*oscars count descended*");
         return movieCollection.printFieldDescendingOscarsCount();
     }
 }

@@ -256,18 +256,21 @@ public class ConsoleClient implements Client {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintAscending(this, receiver));
+                System.out.println("*elements of collection ascended*");
                 PrettyPrinter.printMovieList(movieList);
             }
             case "print_descending" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintDescending(this, receiver));
+                System.out.println("*elements of collection descended*");
                 PrettyPrinter.printMovieList(movieList);
             }
             case "print_field_descending_oscars_count" -> {
                 if (args.length != 0)
                     throw new WrongNumberOfArgumentsException();
                 List<Movie> movieList = invoker.executeAndReturn(new PrintFieldDescendingOscarsCount(this, receiver));
+                System.out.println("*oscars count descended*");
                 PrettyPrinter.printMovieListOscars(movieList);
             }
 
